@@ -1,5 +1,29 @@
 import 'package:flutter/material.dart';
 
+import 'header.dart';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Ação ao clicar em voltar
+        },
+        onProfile: () {
+          // Ação ao clicar no botão de perfil
+          print('Perfil clicado');
+        },
+      ),
+      body: const Center(
+        child: Text(
+          'Conteúdo da Página',
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+
+
 class CriarJogador extends StatelessWidget {
   const CriarJogador({Key? key}) : super(key: key);
 
