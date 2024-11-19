@@ -1,28 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'header.dart';
+import 'header.dart'; // Certifica-te que o ficheiro header.dart existe com o CustomHeader implementado.
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomHeader(
-        onBack: () {
-          Navigator.pop(context); // Ação ao clicar em voltar
-        },
-        onProfile: () {
-          // Ação ao clicar no botão de perfil
-          print('Perfil clicado');
-        },
-      ),
-      body: const Center(
-        child: Text(
-          'Conteúdo da Página',
-          style: TextStyle(fontSize: 16),
-        ),
-      ),
-    );
-  }
-
+void main() {
+  runApp(const CriarJogador());
+}
 
 class CriarJogador extends StatelessWidget {
   const CriarJogador({Key? key}) : super(key: key);
@@ -31,7 +13,7 @@ class CriarJogador extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CriarJogadorPage(),
+      home: CriarJogadorPage(), // Define a página inicial
     );
   }
 }
@@ -44,42 +26,37 @@ class CriarJogadorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            // Ação ao clicar no botão voltar
-          },
-        ),
-        title: const Text(
-          'CRIAR JOGADOR',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Voltar à página anterior
+        },
+        onProfile: () {
+          // Ação ao clicar no botão de perfil
+          print('Perfil clicado');
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Cabeçalho do escudo
+            // Logótipo no topo
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/shield.png', // Substituir pelo path correto do escudo
+                  'assets/shield.png', // Substituir pelo caminho correto do escudo
                   height: 40,
                 ),
               ],
             ),
             const SizedBox(height: 20),
+            // Formulário
             Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Campos do formulário
                   _buildTextField('Nome', 'Introduza o Nome Completo'),
                   const SizedBox(height: 16),
                   _buildTextField('Data de Nascimento', 'Introduza a Data de nascimento'),
@@ -96,6 +73,7 @@ class CriarJogadorPage extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         // Processa os dados
+                        print('Dados validados!');
                       }
                     },
                     style: ElevatedButton.styleFrom(
