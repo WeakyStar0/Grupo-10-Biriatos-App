@@ -1,6 +1,6 @@
 import 'package:appviriatos/main.dart';
 import 'package:flutter/material.dart';
-
+import 'criar jogador.dart';
 
 
 class MenuPage extends StatelessWidget {
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => CriarJogadorPage()),
+                    MaterialPageRoute(builder: (context) => criar jogador()),
                   );
                 },
               ),

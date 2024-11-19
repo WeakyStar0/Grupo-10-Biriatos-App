@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'menu.dart'; // Import MenuPage
 import 'tos.dart'; // Import TermsOfServicePage 
+
 void main() {
   runApp(MyApp());
 }
