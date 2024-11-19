@@ -1,25 +1,9 @@
+import 'package:appviriatos/main.dart';
 import 'package:flutter/material.dart';
 
+
+
 class MenuPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Menu')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Welcome to the Menu Page!', style: TextStyle(fontSize: 24)),
-            // Add more menu options here
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,7 +27,7 @@ class HomeScreen extends StatelessWidget {
               Column(
                 children: [
                   Image.asset(
-                    'assets/logo.png', // Substitua pelo caminho da sua imagem de logo
+                    'LOGO Académico_Viseu_FC.svg', // Substitua pelo caminho da sua imagem de logo
                     height: 80,
                   ),
                   SizedBox(height: 20),
@@ -115,7 +99,7 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LogoutPage()),
+                    MaterialPageRoute(builder: (context) => MyApp()),
                   );
                 },
               ),
