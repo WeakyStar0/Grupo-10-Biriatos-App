@@ -26,8 +26,8 @@ class HomeScreen extends StatelessWidget {
               // Logo e Bem-vindo
               Column(
                 children: [
-                  Image.asset(
-                    'LOGO Académico_Viseu_FC.svg', // Substitua pelo caminho da sua imagem de logo
+                  Image.asset(  
+                    'appviriatos\web\icons\EmbAc_Viseu-200x200-300.png', //IMG
                     height: 80,
                   ),
                   SizedBox(height: 20),
