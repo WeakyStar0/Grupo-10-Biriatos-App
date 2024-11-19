@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'menu.dart'; // Import MenuPage
-import 'terms_of_service.dart'; // Import TermsOfServicePage
+import 'tos.dart'; // Import TermsOfServicePage 
 
 void main() {
   runApp(MyApp());
@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                         // Navigate to Terms of Service page
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => tos.dart()),
+                          MaterialPageRoute(builder: (context) => TermsOfServicePage()),
                         );
                       },
                       child: Text(
@@ -134,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                             // Navigate to MenuPage after login
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => menu.dart()),
+                              MaterialPageRoute(builder: (context) => MenuPage()),
                             );
                           }
                         : null,
