@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Terms and Conditions Checkbox
+                // TOS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        // Navigate to Terms of Service page
+                        // tos
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => TermsOfServicePage()),
@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Login Button
+                // Login 
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _termsAccepted &&
                             _formKey.currentState!.validate()
                         ? () {
-                            // Navigate to MenuPage after login
+                            // menu navegação
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => MenuPage()),

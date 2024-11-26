@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'header.dart'; // Certifica-te que o ficheiro header.dart existe com o CustomHeader implementado.
+import 'header.dart'; // NAO SE ESQUECAM DE IMPORTAR O HEADER EM TODO O LADO QUE TEM HEADER OKAY??? @Reueben@x1cuu
 
 void main() {
   runApp(const CriarJogador());
