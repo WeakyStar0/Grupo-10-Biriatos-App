@@ -25,7 +25,7 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           // Logótipo no centro
           Image.asset(
-            'assets/shield.png', // Substitui pelo caminho correto do logótipo
+            'assets/shield.png', // Substitui pelo caminho correto do logótipo 
             height: 40,
           ),
           // Botão de perfil
