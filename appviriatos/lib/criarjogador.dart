@@ -45,7 +45,7 @@ class CriarJogadorPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/shield.png', // Substituir pelo caminho correto do escudo
+                  'assets/shield.png', // @x1cuu
                   height: 40,
                 ),
               ],

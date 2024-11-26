@@ -23,7 +23,7 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
           Image.asset(
-            'assets/shield.png', // Replace with the correct path to your logo
+            'assets/shield.png', // @x1cuu
             height: 40,
           ),
           IconButton(
