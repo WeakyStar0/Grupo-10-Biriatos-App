@@ -1,6 +1,7 @@
 import 'package:appviriatos/main.dart';
 import 'package:flutter/material.dart';
 import 'criarjogador.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 
 class MenuPage extends StatelessWidget {
@@ -16,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850], // Cor de fundo
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255), // Cor de fundo
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -26,15 +27,15 @@ class HomeScreen extends StatelessWidget {
               // Logo e Bem-vindo
               Column(
                 children: [
-                  Image.asset(  
-                    'appviriatos\web\icons\EmbAc_Viseu-200x200-300.png', //IMG
-                    height: 80,
+                  SvgPicture.asset( 
+                    'web/icons/LOGO Académico_Viseu_FC.svg', //IMG
+                    height: 170,
                   ),
                   SizedBox(height: 20),
                   Text(
                     'Bem-vindo',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: const Color.fromARGB(255, 0, 0, 0),
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -44,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                     'Acompanhe os jogos, navegue pelos\nescalões e controle seus assuntos\nfacilmente.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: const Color.fromARGB(179, 0, 0, 0),
                       fontSize: 14,
                     ),
                   ),
