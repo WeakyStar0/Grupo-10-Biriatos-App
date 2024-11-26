@@ -18,17 +18,14 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Botão de voltar
           IconButton(
             onPressed: onBack,
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
-          // Logótipo no centro
           Image.asset(
-            'assets/shield.png', // Substitui pelo caminho correto do logótipo 
+            'assets/shield.png', // Replace with the correct path to your logo
             height: 40,
           ),
-          // Botão de perfil
           IconButton(
             onPressed: onProfile,
             icon: const Icon(Icons.person, color: Colors.white),
@@ -39,5 +36,5 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(56.0); // Altura do header
+  Size get preferredSize => const Size.fromHeight(56.0); // Header height
 }
