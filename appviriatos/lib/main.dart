@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       },
                       child: Text(
-                        'I accept the Terms and Conditions',
+                        'Li e aceito os Termos e Condições',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.blue,
