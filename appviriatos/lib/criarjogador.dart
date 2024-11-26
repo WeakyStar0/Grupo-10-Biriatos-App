@@ -23,8 +23,8 @@ class CriarJogadorPage extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
+  @override //HEADER ACHO EU -MARK
+  Widget build(BuildContext context) { 
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
@@ -33,7 +33,7 @@ class CriarJogadorPage extends StatelessWidget {
         onProfile: () {
           // Ação ao clicar no botão de perfil
           print('Perfil clicado');
-        },
+        }, 
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
