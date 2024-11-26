@@ -1,6 +1,7 @@
 import 'package:appviriatos/main.dart';
 import 'package:flutter/material.dart';
 import 'criarjogador.dart';
+import 'tarefas.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 

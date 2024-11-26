@@ -1,26 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'header.dart'; // Certifica-te que tens o CustomHeader implementado no ficheiro header.dart
-
-void main() {
-  runApp(const TarefasApp());
-}
-
-class TarefasApp extends StatelessWidget {
-  const TarefasApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: TarefasPage(),
-    );
-  }
-}
-
 class TarefasPage extends StatelessWidget {
-  TarefasPage({Key? key}) : super(key: key);
-
   final List<Map<String, String>> jogos = [
     {
       'titulo': 'ACADÉMICO  X  TONDELA',
@@ -43,20 +23,11 @@ class TarefasPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeader(
-        onBack: () {
-          Navigator.pop(context); // Voltar à página anterior
-        },
-        onProfile: () {
-          // Ação ao clicar no botão de perfil
-          print('Perfil clicado');
-        },
-      ),
+      appBar: AppBar(title: Text('Tarefas')),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 16),
-          // Título
           const Center(
             child: Text(
               'TAREFAS',
@@ -120,30 +91,6 @@ class TarefasPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-      // Navegação inferior
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.sports_soccer),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          // Define as ações para cada ícone na barra de navegação
-          print('Ícone $index clicado');
-        },
       ),
     );
   }
