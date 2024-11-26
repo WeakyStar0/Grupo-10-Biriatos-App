@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'header.dart'; // Certifica-te que o ficheiro header.dart existe com o CustomHeader implementado.
+import 'header.dart'; // NAO SE ESQUECAM DE IMPORTAR O HEADER EM TODO O LADO QUE TEM HEADER OKAY??? @Reueben@x1cuu
 
 void main() {
   runApp(const CriarJogador());
@@ -23,8 +23,8 @@ class CriarJogadorPage extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
+  @override //HEADER ACHO EU -MARK
+  Widget build(BuildContext context) { 
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
@@ -33,7 +33,7 @@ class CriarJogadorPage extends StatelessWidget {
         onProfile: () {
           // Ação ao clicar no botão de perfil
           print('Perfil clicado');
-        },
+        }, 
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,7 +45,7 @@ class CriarJogadorPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/shield.png', // Substituir pelo caminho correto do escudo
+                  'assets/shield.png', // @x1cuu
                   height: 40,
                 ),
               ],
