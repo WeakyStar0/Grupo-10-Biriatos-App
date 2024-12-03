@@ -28,29 +28,32 @@ class HomeScreen extends StatelessWidget {
               // Retângulo horizontal atrás do logotipo
                Container(
                 width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 170, // Altura do retangulo
+                height: 150, // Altura do retangulo
                 color: const Color.fromARGB(255, 0, 0, 0), // Cor do retangulo
               ),
 
               Container(
                 width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 160, // Altura do retangulo
+                height: 140, // Altura do retangulo
                 color: const Color.fromARGB(255, 255, 255, 255), // Cor do retangulo
               ),
 
               Container(
                 width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 130, // Altura do retangulo
+                height: 110, // Altura do retangulo
                 color: const Color.fromARGB(255, 0, 0, 0), // Cor do retangulo
               ),
               // Logotipo SVG
               SvgPicture.asset(
-                'web/icons/LOGO Académico_Viseu_FC.svg', // Caminho do SVG
-                height: 370, // Altura do logotipo
+                'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
+                height: 270,
+                semanticsLabel: 'Logotipo Académico de Viseu FC',
+                placeholderBuilder: (BuildContext context) => CircularProgressIndicator(),
               ),
+
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 0),
           Text(
            'Bem-vindo',
             style: TextStyle(
@@ -60,7 +63,7 @@ class HomeScreen extends StatelessWidget {
               fontWeight: FontWeight.bold, // Ainda pode manter o peso para consistência
                       ),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 0),
          Text(
               'Acompanhe os jogos, navegue pelos\nescalões e controle seus assuntos\nfacilmente.',
               textAlign: TextAlign.center,
@@ -71,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                 fontWeight: FontWeight.w400, // Peso correspondente ao Book (400)
               ),
             ),
-          SizedBox(height: 30),
+          SizedBox(height: 10),
 
           // Botões de navegação
           NavigationButton(
@@ -152,11 +155,11 @@ class NavigationButton extends StatelessWidget {
         label: Text(label, style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Alterado para 'backgroundColor'
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          textStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
       ),
     );
