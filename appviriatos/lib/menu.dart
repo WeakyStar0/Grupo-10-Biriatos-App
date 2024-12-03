@@ -1,8 +1,10 @@
 import 'package:appviriatos/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'criarjogador.dart';
 import 'tarefas.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'rascunhos.dart';
+import 'clubes.dart'; 
 
 class MenuPage extends StatelessWidget {
   @override
@@ -26,56 +28,53 @@ class HomeScreen extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               // Retângulo horizontal atrás do logotipo
-               Container(
-                width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 150, // Altura do retangulo
-                color: const Color.fromARGB(255, 0, 0, 0), // Cor do retangulo
-              ),
-
               Container(
                 width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 140, // Altura do retangulo
-                color: const Color.fromARGB(255, 255, 255, 255), // Cor do retangulo
+                height: 150, // Altura do retângulo
+                color: const Color.fromARGB(255, 0, 0, 0), // Cor do retângulo
               ),
-
               Container(
                 width: MediaQuery.of(context).size.width, // Garante largura total
-                height: 110, // Altura do retangulo
-                color: const Color.fromARGB(255, 0, 0, 0), // Cor do retangulo
+                height: 140, // Altura do retângulo
+                color: const Color.fromARGB(255, 255, 255, 255), // Cor do retângulo
+              ),
+              Container(
+                width: MediaQuery.of(context).size.width, // Garante largura total
+                height: 110, // Altura do retângulo
+                color: const Color.fromARGB(255, 0, 0, 0), // Cor do retângulo
               ),
               // Logotipo SVG
               SvgPicture.asset(
                 'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
                 height: 270,
                 semanticsLabel: 'Logotipo Académico de Viseu FC',
-                placeholderBuilder: (BuildContext context) => CircularProgressIndicator(),
+                placeholderBuilder: (BuildContext context) =>
+                    CircularProgressIndicator(),
               ),
-
             ],
           ),
           SizedBox(height: 0),
           Text(
-           'Bem-vindo',
+            'Bem-vindo',
             style: TextStyle(
               fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
               color: const Color.fromARGB(255, 0, 0, 0),
               fontSize: 50,
-              fontWeight: FontWeight.bold, // Ainda pode manter o peso para consistência
-                      ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           SizedBox(height: 0),
-         Text(
-              'Acompanhe os jogos, navegue pelos\nescalões e controle seus assuntos\nfacilmente.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'FuturaStd', // Nome da família definido no pubspec.yaml
-                color: const Color.fromARGB(179, 0, 0, 0),
-                fontSize: 20,
-                fontWeight: FontWeight.w400, // Peso correspondente ao Book (400)
-              ),
+          Text(
+            'Acompanhe os jogos, navegue pelos\nescalões e controle seus assuntos\nfacilmente.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'FuturaStd', // Nome da família definido no pubspec.yaml
+              color: const Color.fromARGB(179, 0, 0, 0),
+              fontSize: 20,
+              fontWeight: FontWeight.w400,
             ),
+          ),
           SizedBox(height: 10),
-
           // Botões de navegação
           NavigationButton(
             icon: Icons.check_circle_outline,
@@ -98,22 +97,22 @@ class HomeScreen extends StatelessWidget {
             },
           ),
           NavigationButton(
-            icon: Icons.person_add_alt_1_outlined,
-            label: 'CRIAR JOGADOR',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CriarJogador()),
-              );
-            },
-          ),
-          NavigationButton(
             icon: Icons.note_alt_outlined,
             label: 'RASCUNHOS',
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => RascunhosPage()),
+              );
+            },
+          ),
+          NavigationButton(
+            icon: Icons.person_add_alt_1_outlined,
+            label: 'CRIAR JOGADOR',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => CriarJogadorPage()),
               );
             },
           ),
@@ -154,7 +153,7 @@ class NavigationButton extends StatelessWidget {
         icon: Icon(icon, color: Colors.white),
         label: Text(label, style: TextStyle(color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 0, 0, 0), // Alterado para 'backgroundColor'
+          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
           padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -162,61 +161,6 @@ class NavigationButton extends StatelessWidget {
           textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
       ),
-    );
-  }
-}
-
-// Tela para Tarefas
-class TarefasPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Tarefas')),
-      body: Center(child: Text('Página de Tarefas')),
-    );
-  }
-}
-
-// Tela para Clubes
-class ClubesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Clubes')),
-      body: Center(child: Text('Página de Clubes')),
-    );
-  }
-}
-
-// Tela para Criar Jogador
-class CriarJogadorPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Criar Jogador')),
-      body: Center(child: Text('Página de Criar Jogador')),
-    );
-  }
-}
-
-// Tela para Rascunhos
-class RascunhosPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Rascunhos')),
-      body: Center(child: Text('Página de Rascunhos')),
-    );
-  }
-}
-
-// Tela para Log-out
-class LogoutPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Log-out')),
-      body: Center(child: Text('Página de Log-out')),
     );
   }
 }
