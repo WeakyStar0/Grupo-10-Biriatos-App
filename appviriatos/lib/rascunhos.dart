@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'navbutton.dart'; // Certifica-te de que tens o ficheiro com o botão customizado.
 import 'header.dart'; // Certifica-te de que tens o ficheiro com o CustomHeader.
 
 void main() {
@@ -31,6 +31,13 @@ class RascunhosPage extends StatelessWidget {
       'data': 'Data de criação: __/__/____',
     },
   ];
+
+  final int currentIndex = 1;
+
+  void onButtonTap(int index) {
+    // Adiciona lógica para navegação ou outra ação, se necessário.
+    print('Botão pressionado: $index');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,30 +107,11 @@ class RascunhosPage extends StatelessWidget {
           ),
         ],
       ),
-      // Barra de navegação inferior
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.sports_soccer),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: '',
-          ),
-        ],
-        onTap: (index) {
-          // Define as ações para cada ícone na barra de navegação
-          print('Ícone $index clicado');
-        },
+      floatingActionButton: CustomFloatingButton(
+        currentIndex: currentIndex,
+        onTap: onButtonTap,
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
