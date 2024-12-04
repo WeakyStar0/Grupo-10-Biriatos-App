@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: _termsAccepted &&
                             _formKey.currentState!.validate()
                         ? () {
-                            // menu navegação
+                            // menu
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => MenuPage()),
