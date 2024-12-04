@@ -39,10 +39,6 @@ class RascunhosPage extends StatelessWidget {
         onBack: () {
           Navigator.pop(context); // Voltar à página anterior
         },
-        onProfile: () {
-          // Ação ao clicar no botão de perfil
-          print('Perfil clicado');
-        },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
