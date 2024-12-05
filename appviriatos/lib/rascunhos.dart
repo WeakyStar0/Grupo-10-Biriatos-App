@@ -50,16 +50,19 @@ class RascunhosPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 16),
+          const SizedBox(height: 25),
           // Título
           const Center(
             child: Text(
-              'RASCUNHOS',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+               'RASCUNHOS',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
           ),
           const SizedBox(height: 16),
           // Lista de rascunhos

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'header.dart';
 
 void main() {
   runApp(MaterialApp(home: ClubesPage()));
@@ -16,7 +17,7 @@ class _ClubesPageState extends State<ClubesPage> {
       'nome': 'Benfica',
       'ranks': [
         {'nome': 'Rank 1', 'jogadores': ['Carlos Cunha', 'Rui Carreto']},
-        {'nome': 'Rank 2', 'jogadores': ['Disney', 'Valter']} 
+        {'nome': 'Rank 2', 'jogadores': ['Disney', 'Valter']}
       ],
     },
     {
@@ -45,14 +46,15 @@ class _ClubesPageState extends State<ClubesPage> {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Clubes de Portugal'),
-        backgroundColor: Colors.red,
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Voltar à página anterior
+        },
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(25.0),
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Pesquisar clube',
