@@ -60,7 +60,7 @@ class CustomHeader extends StatelessWidget implements PreferredSizeWidget {
           // Botão de voltar
           Positioned(
             left: 8.0, // Deslocar botão para a esquerda
-            top: 14.0, // Alinhamento vertical
+            top: 13.5, // Alinhamento vertical
             child: IconButton(
               onPressed: onBack,
               icon: const Icon(Icons.arrow_back, color: Colors.white),

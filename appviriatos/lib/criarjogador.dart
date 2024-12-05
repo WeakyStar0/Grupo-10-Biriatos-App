@@ -32,39 +32,39 @@ class CriarJogadorPage extends StatelessWidget {
         },
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Logótipo no topo
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/shield.png', // @x1cuu
-                  height: 40,
+             Text(
+                'CRIAR JOGADOR',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                ),
+                SizedBox(height: 15),
             // Formulário
             Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _buildTextField('Nome', 'Introduza o Nome Completo'),
-                  const SizedBox(height: 16),
-                  _buildTextField('Data de Nascimento', 'Introduza a Data de nascimento'),
-                  const SizedBox(height: 16),
-                  _buildTextField('Posição', 'Introduza a Posição'),
-                  const SizedBox(height: 16),
-                  _buildTextField('Nacionalidade', 'Introduza a Nacionalidade'),
-                  const SizedBox(height: 16),
-                  _buildTextField('Clube', 'Introduza o Clube'),
-                  const SizedBox(height: 16),
-                  _buildTextField('Contacto', 'Introduza o Contacto'),
-                  const SizedBox(height: 32),
+                  _buildTextField('Nome', ''),
+                  const SizedBox(height: 5),
+                  _buildTextField('Data de Nascimento', ''),
+                  const SizedBox(height: 5),
+                  _buildTextField('Posição', ''),
+                  const SizedBox(height: 5),
+                  _buildTextField('Nacionalidade', ''),
+                  const SizedBox(height: 5),
+                  _buildTextField('Clube', ''),
+                  const SizedBox(height: 5),
+                  _buildTextField('Contacto', ''),
+                  const SizedBox(height: 12),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
@@ -74,7 +74,7 @@ class CriarJogadorPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
                     ),
                     child: const Text(
                       'ENVIAR',

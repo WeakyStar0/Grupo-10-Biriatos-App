@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart'; // Importa flutter_svg
 import 'menu.dart'; // Import MenuPage
 import 'tos.dart'; // Import TermsOfServicePage 
 
@@ -12,7 +13,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Login Page',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
         textTheme: TextTheme(
           bodyMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.black),
         ),
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -46,10 +46,27 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Logo
-                Icon(Icons.lock, size: 100, color: Colors.blue),
+                // Substituindo o ícone pelo logotipo SVG
+                SvgPicture.asset(
+                  'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
+                  height: 250,
+                  semanticsLabel: 'Logotipo Académico de Viseu FC',
+                  placeholderBuilder: (BuildContext context) =>
+                      CircularProgressIndicator(),
+                ),
                 SizedBox(height: 20),
 
+                Text(
+                'LOGIN',
+                style: TextStyle(
+                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                  color: const Color.fromARGB(255, 0, 0, 0),
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                ),
+                ),
+                SizedBox(height: 30),
+      
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -61,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
+                      return 'Por favor coloque o seu email';
                     }
                     return null;
                   },
@@ -79,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   obscureText: true,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter your password';
+                      return 'Por favor coloque a password';
                     }
                     return null;
                   },
@@ -110,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                         'Li e aceito os Termos e Condições',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
-                          color: Colors.blue,
+                          color: const Color.fromARGB(255, 0, 0, 0),
                         ),
                       ),
                     ),

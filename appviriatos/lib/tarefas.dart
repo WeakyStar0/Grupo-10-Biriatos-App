@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'navbutton.dart';
+import 'header.dart';
 
 void main() {
   runApp(const Tarefas());
@@ -7,7 +8,6 @@ void main() {
 
 class Tarefas extends StatelessWidget {
   const Tarefas({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +19,6 @@ class Tarefas extends StatelessWidget {
 
 class TarefasPage extends StatefulWidget {
   const TarefasPage({Key? key}) : super(key: key);
-
   @override
   _TarefasPageState createState() => _TarefasPageState();
 }
@@ -93,6 +92,11 @@ class _TarefasPageState extends State<TarefasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Voltar à página anterior
+        },
+      ),
       backgroundColor: Colors.white,
       body: Stack(
         children: [
