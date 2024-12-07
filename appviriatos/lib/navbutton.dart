@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-//Jamais vos esquceis de colocar este dito cujo botão em todas as páginas que necessitam do seu suporte// 
+import 'tarefas.dart';
+import 'clubes.dart'; // Certifique-se de criar este arquivo.
+import 'rascunhos.dart'; // Certifique-se de criar este arquivo.
 
 class CustomFloatingButton extends StatelessWidget {
   final int currentIndex;
@@ -20,7 +22,7 @@ class CustomFloatingButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
         decoration: BoxDecoration(
           color: Colors.black,
-          borderRadius: BorderRadius.circular(20.0), // Reduzi o arredondamento
+          borderRadius: BorderRadius.circular(20.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
@@ -33,15 +35,31 @@ class CustomFloatingButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              onPressed: () => onTap(0),
-              iconSize: 32.0, // Ícones menores
+              onPressed: () {
+                if (currentIndex != 0) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const TarefasPage()),
+                  );
+                }
+                onTap(0);
+              },
+              iconSize: 32.0,
               icon: Icon(
                 Icons.sports_soccer,
                 color: currentIndex == 0 ? Colors.white : Colors.grey,
               ),
             ),
             IconButton(
-              onPressed: () => onTap(1),
+              onPressed: () {
+                if (currentIndex != 1) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ClubesPage()),
+                  );
+                }
+                onTap(1);
+              },
               iconSize: 32.0,
               icon: Icon(
                 Icons.group,
@@ -49,7 +67,15 @@ class CustomFloatingButton extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () => onTap(2),
+              onPressed: () {
+                if (currentIndex != 2) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => RascunhosPage()),
+                  );
+                }
+                onTap(2);
+              },
               iconSize: 32.0,
               icon: Icon(
                 Icons.task,
