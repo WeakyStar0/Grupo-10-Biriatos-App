@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'navbutton.dart';
 import 'header.dart'; // NAO SE ESQUECAM DE IMPORTAR O HEADER EM TODO O LADO QUE TEM HEADER OKAY??? @Reueben@x1cuu
 
 void main() {
@@ -87,8 +87,21 @@ class CriarJogadorPage extends StatelessWidget {
           ],
         ),
       ),
+
+      //navbutton_inicio
+
+       floatingActionButton: CustomFloatingButton(
+        currentIndex: _currentIndex,
+        onTap: (index) => navigateToPage(context, index),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+     
+      int _currentIndex = 4; // Índice atual da página (Tarefas = 2)
+
+      //navbutton_fim
 
   Widget _buildTextField(String label, String hint) {
     return TextFormField(

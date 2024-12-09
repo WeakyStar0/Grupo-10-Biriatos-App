@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'clubes.dart';
+import 'rascunhos.dart';
 import 'tarefas.dart';
-import 'clubes.dart'; // Certifique-se de criar este arquivo.
-import 'rascunhos.dart'; // Certifique-se de criar este arquivo.
 
 class CustomFloatingButton extends StatelessWidget {
   final int currentIndex;
@@ -35,56 +35,52 @@ class CustomFloatingButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              onPressed: () {
-                if (currentIndex != 0) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const TarefasPage()),
-                  );
-                }
-                onTap(0);
-              },
+              onPressed: () => onTap(0),
               iconSize: 32.0,
               icon: Icon(
-                Icons.sports_soccer,
+                Icons.group,
                 color: currentIndex == 0 ? Colors.white : Colors.grey,
               ),
             ),
             IconButton(
-              onPressed: () {
-                if (currentIndex != 1) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ClubesPage()),
-                  );
-                }
-                onTap(1);
-              },
+              onPressed: () => onTap(1),
               iconSize: 32.0,
               icon: Icon(
-                Icons.group,
+                Icons.task,
                 color: currentIndex == 1 ? Colors.white : Colors.grey,
               ),
             ),
             IconButton(
-              onPressed: () {
-                if (currentIndex != 2) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => RascunhosPage()),
-                  );
-                }
-                onTap(2);
-              },
+              onPressed: () => onTap(2),
               iconSize: 32.0,
               icon: Icon(
-                Icons.task,
+                Icons.sports_soccer,
                 color: currentIndex == 2 ? Colors.white : Colors.grey,
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Lógica central de navegação
+void navigateToPage(BuildContext context, int index) {
+  if (index == 0) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => ClubesPage()),
+    );
+  } else if (index == 1) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => RascunhosPage()),
+    );
+  } else if (index == 2) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => TarefasPage()),
     );
   }
 }

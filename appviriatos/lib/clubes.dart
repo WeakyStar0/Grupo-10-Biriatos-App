@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'tarefas.dart';
-import 'rascunhos.dart';
-import 'header.dart';
+import 'navbutton.dart'; // Importa o widget e a lógica de navegação
+import 'header.dart'; // Importa o CustomHeader
 
 class ClubesPage extends StatefulWidget {
   @override
@@ -34,29 +33,12 @@ class _ClubesPageState extends State<ClubesPage> {
     },
   ];
 
-  String searchQuery = '';
-  int _currentIndex = 0;
-
-  void _navigateToPage(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
-    if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => RascunhosPage()),
-      );
-    } else if (index == 2) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => TarefasPage()),
-      );
-    }
-  }
+  String searchQuery = ''; // Variável de pesquisa
+  int _currentIndex = 0; // Índice atual da página (Clubes = 0)
 
   @override
   Widget build(BuildContext context) {
+    // Filtra os clubes de acordo com a pesquisa
     final filteredClubes = clubes
         .where((clube) =>
             clube['nome'].toLowerCase().contains(searchQuery.toLowerCase()))
@@ -69,9 +51,26 @@ class _ClubesPageState extends State<ClubesPage> {
         },
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const SizedBox(height: 25),
+          // Título
+          const Center(
+            child: Text(
+              'CLUBES',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          // Campo de pesquisa
           Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(15.0),
             child: TextField(
               decoration: InputDecoration(
                 labelText: 'Pesquisar clube',
@@ -85,6 +84,7 @@ class _ClubesPageState extends State<ClubesPage> {
               },
             ),
           ),
+          // Lista de clubes filtrados
           Expanded(
             child: ListView.builder(
               itemCount: filteredClubes.length,
@@ -117,97 +117,12 @@ class _ClubesPageState extends State<ClubesPage> {
           ),
         ],
       ),
+      // Botão de navegação flutuante
       floatingActionButton: CustomFloatingButton(
         currentIndex: _currentIndex,
-        onTap: _navigateToPage,
+        onTap: (index) => navigateToPage(context, index),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-}
-
-class CustomFloatingButton extends StatelessWidget {
-  final int currentIndex;
-  final Function(int) onTap;
-
-  const CustomFloatingButton({
-    Key? key,
-    required this.currentIndex,
-    required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: const EdgeInsets.all(16.0),
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(20.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            IconButton(
-              onPressed: () {
-                if (currentIndex != 0) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => ClubesPage()),
-                  );
-                }
-                onTap(0);
-              },
-              iconSize: 32.0,
-              icon: Icon(
-                Icons.sports_soccer,
-                color: currentIndex == 0 ? Colors.white : Colors.grey,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                if (currentIndex != 1) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => RascunhosPage()),
-                  );
-                }
-                onTap(1);
-              },
-              iconSize: 32.0,
-              icon: Icon(
-                Icons.group,
-                color: currentIndex == 1 ? Colors.white : Colors.grey,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                if (currentIndex != 2) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => TarefasPage()),
-                  );
-                }
-                onTap(2);
-              },
-              iconSize: 32.0,
-              icon: Icon(
-                Icons.task,
-                color: currentIndex == 2 ? Colors.white : Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
