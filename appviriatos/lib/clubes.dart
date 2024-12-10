@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navbutton.dart'; // Importa o widget e a lógica de navegação
 import 'header.dart'; // Importa o CustomHeader
+import 'equipa.dart'; // Importa a página de Equipa
 
 class ClubesPage extends StatefulWidget {
   @override
@@ -8,7 +9,6 @@ class ClubesPage extends StatefulWidget {
 }
 
 class _ClubesPageState extends State<ClubesPage> {
- 
   final List<Map<String, dynamic>> clubes = [
     {
       'nome': 'Benfica', 
@@ -109,6 +109,17 @@ class _ClubesPageState extends State<ClubesPage> {
                         children: rank['jogadores'].map<Widget>((jogador) {
                           return ListTile(
                             title: Text(jogador),
+                            onTap: () {
+                              if (rank['nome'] == 'Sub-19' && jogador == 'Equipa A') {
+                                // Navegar para a página de Equipa apenas para "Equipa A"
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EquipaPage(),
+                                  ),
+                                );
+                              }
+                            },
                           );
                         }).toList(),
                       );
