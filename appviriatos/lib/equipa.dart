@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
 import 'header.dart'; // Importa o CustomHeader
+import 'jogador.dart'; // Importa a página do jogador
 
 class EquipaPage extends StatefulWidget {
   @override
@@ -17,6 +18,14 @@ class _EquipaPageState extends State<EquipaPage> {
     'Avançados': ['Jogador 12', 'Jogador 13', 'Jogador 14'],
   };
 
+  // Mapa de cores associadas a cada categoria
+  final Map<String, Color> categoryColors = {
+    'Guarda-redes': Color(0xFFC39B44),
+    'Defesas': Color(0xFF2C9E8B),
+    'Médios': Color(0xFF2B8B39),
+    'Avançados': Color(0xFF9F574F),
+  };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +39,7 @@ class _EquipaPageState extends State<EquipaPage> {
         child: ListView(
           children: playerCategories.keys.map((category) {
             List<String> players = playerCategories[category]!;
+            Color categoryColor = categoryColors[category]!;
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,8 +49,9 @@ class _EquipaPageState extends State<EquipaPage> {
                   child: Text(
                     category,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      fontFamily: 'FuturaStd', // Nome da fonte
                     ),
                   ),
                 ),
@@ -54,13 +65,45 @@ class _EquipaPageState extends State<EquipaPage> {
                   ),
                   itemCount: players.length,
                   itemBuilder: (context, index) {
-                    return Card(
-                      margin: EdgeInsets.symmetric(vertical: 4.0),
-                      elevation: 4.0,
-                      child: Center(
-                        child: Text(
-                          players[index],
-                          style: TextStyle(fontSize: 18),
+                    return GestureDetector(
+                      onTap: () {
+                        // Navega para a página do jogador com o nome do jogador
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JogadorPage(
+                              jogadorNome: players[index], // Passa o nome do jogador
+                            ),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        color: categoryColor, // Define a cor do Card com base na categoria
+                        margin: EdgeInsets.symmetric(vertical: 4.0),
+                        elevation: 4.0,
+                        child: Stack(
+                          children: [
+                            Center(
+                              child: Icon(
+                                Icons.person, // Placeholder como ícone
+                                size: 50,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                            ),
+                            Positioned(
+                              left: 8.0,
+                              bottom: 8.0,
+                              child: Text(
+                                players[index],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white, // Cor do texto
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Futura Std Bold', // Nome da fonte
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
