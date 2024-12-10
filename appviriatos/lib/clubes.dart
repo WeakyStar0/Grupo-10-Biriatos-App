@@ -11,7 +11,7 @@ class ClubesPage extends StatefulWidget {
 class _ClubesPageState extends State<ClubesPage> {
   final List<Map<String, dynamic>> clubes = [
     {
-      'nome': 'Benfica', 
+      'nome': 'Académico de Viseu', 
       'ranks': [
         {'nome': 'Equipa Profissional', 'jogadores': ['']},
         {'nome': 'Sub-23', 'jogadores': ['']},
@@ -21,14 +21,14 @@ class _ClubesPageState extends State<ClubesPage> {
       ],
     },
     {
-      'nome': 'Porto',
+      'nome': 'FC Porto',
       'ranks': [
         {'nome': 'Rank 1', 'jogadores': ['Miguel Santos', 'Rui Almeida']},
         {'nome': 'Rank 3', 'jogadores': ['André Matos', 'Vitor Sousa']}
       ],
     },
     {
-      'nome': 'Sporting',
+      'nome': 'Sl Benfica',
       'ranks': [
         {'nome': 'Rank 2', 'jogadores': ['Hugo Leite', 'Tiago Nunes']},
         {'nome': 'Rank 4', 'jogadores': ['Joana Costa', 'Ana Marques']}

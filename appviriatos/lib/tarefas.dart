@@ -63,15 +63,31 @@ class _TarefasPageState extends State<TarefasPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
           Navigator.pop(context); // Voltar para a página anterior
         },
+        
       ),
       backgroundColor: Colors.white,
       body: Column(
         children: [
+          const SizedBox(height: 25),
+          // Título
+          const Center(
+            child: Text(
+              'Tarefas',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                color: Color.fromARGB(255, 0, 0, 0),
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
