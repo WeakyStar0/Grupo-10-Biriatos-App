@@ -13,7 +13,7 @@ class _ClubesPageState extends State<ClubesPage> {
     {
       'nome': 'Benfica', 
       'ranks': [
-        {'nome': 'Equipa Profissional', 'jogadores': ['']},
+        {'nome': 'Equipa Profissionall', 'jogadores': ['']},
         {'nome': 'Sub-23', 'jogadores': ['']},
         {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
         {'nome': 'Formação masculino', 'jogadores': ['Sub - 16 A', 'Sub - 16 B', 'Sub - 14', 'Sub -13', 'Sub - 12 A', 'Sub - 12 B', 'Sub - 11', 'Sub - 10']},
