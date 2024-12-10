@@ -1,94 +1,81 @@
 import 'package:flutter/material.dart';
-import 'header.dart';
-import 'navbutton.dart';
-//imports 
-void main() {
-  runApp(equipa());  
-}
+import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
+import 'header.dart'; // Importa o CustomHeader
 
-class equipa extends StatelessWidget {
+class EquipaPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Lista de Jogadores',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: PlayerListPage(),
-    );
-  }
+  _EquipaPageState createState() => _EquipaPageState();
 }
 
-class PlayerListPage extends StatelessWidget {
+class _EquipaPageState extends State<EquipaPage> {
+  int _currentIndex = 4; // Índice atual da página
+
   final Map<String, List<String>> playerCategories = {
     'Guarda-redes': ['Jogador 1', 'Jogador 2', 'Jogador 3'],
-    'Defesas': ['Jogador 2', 'Jogador 3', 'Jogador 4', 'Jogador 5'],
-    'Médios': ['Jogador 6', 'Jogador 7'],
-    'Avançados': ['Jogador 8', 'Jogador 9'],
+    'Defesas': ['Jogador 4', 'Jogador 5', 'Jogador 6', 'Jogador 7', 'Jogador 8'],
+    'Médios': ['Jogador 9', 'Jogador 10', 'Jogador 11'],
+    'Avançados': ['Jogador 12', 'Jogador 13', 'Jogador 14'],
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Académico - Equipamento'),
-        centerTitle: true,
-        backgroundColor: Colors.black,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Implementar a funcionalidade de busca
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Função de busca ainda não implementada."),
-              ));
-            },
-          ),
-        ],
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Voltar à página anterior
+        },
       ),
-      body: ListView.builder(
-        itemCount: playerCategories.keys.length,
-        itemBuilder: (context, index) {
-          String category = playerCategories.keys.elementAt(index);
-          List<String> players = playerCategories[category]!;
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ListView(
+          children: playerCategories.keys.map((category) {
+            List<String> players = playerCategories[category]!;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  category,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-              ...players.map((player) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                  child: Container(
-                    padding: EdgeInsets.all(16.0),
-                    color: Colors.green[100], // Cor dos jogadores
-                    child: Text(
-                      player,
-                      style: TextStyle(fontSize: 18),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    category,
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                );
-              }).toList(),
-            ],
-          );
-        },
+                ),
+                GridView.builder(
+                  shrinkWrap: true, // Permite o GridView se ajustar ao tamanho da tela
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3, // 3 jogadores por linha
+                    crossAxisSpacing: 8.0, // Espaçamento entre os itens
+                    mainAxisSpacing: 8.0, // Espaçamento entre as linhas
+                  ),
+                  itemCount: players.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      margin: EdgeInsets.symmetric(vertical: 4.0),
+                      elevation: 4.0,
+                      child: Center(
+                        child: Text(
+                          players[index],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+          }).toList(),
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Ação para o botão flutuante
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Ação do botão flutuante ainda não configurada."),
-          ));
-        },
-        child: Icon(Icons.add),
+      floatingActionButton: CustomFloatingButton(
+        currentIndex: _currentIndex,
+        onTap: (index) => navigateToPage(context, index),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
-
-// o mark teve aqui: https://www.youtube.com/watch?v=dQw4w9WgXcQ 
