@@ -3,10 +3,10 @@ import 'header.dart';
 import 'navbutton.dart';
 //imports 
 void main() {
-  runApp(MyApp());
+  runApp(equipa());  
 }
 
-class MyApp extends StatelessWidget {
+class equipa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
