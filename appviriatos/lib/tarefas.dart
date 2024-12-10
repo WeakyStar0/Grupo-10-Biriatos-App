@@ -27,36 +27,16 @@ class _TarefasPageState extends State<TarefasPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> tarefas = [
     {
-      'time1': 'ACADÉMICO',
-      'time2': 'TONDELA',
-      'data': '01/12/2024',
-      'hora': '19:00',
-      'categoria': 'Equipa Profissional',
-      'estadio': 'Estádio do Fontelo'
+      'jogador': 'Jogador 1',
+      'time1': 'FC Porto',
+      'time2': 'SL Benfica',
+      
     },
     {
-      'time1': 'BOAVISTA',
-      'time2': 'RIO AVE',
-      'data': '02/12/2024',
-      'hora': '19:00',
-      'categoria': 'Sub-19',
-      'estadio': 'Estádio do Bessa'
-    },
-    {
-      'time1': 'SL BENFICA',
-      'time2': 'FC PORTO',
-      'data': '10/12/2024',
-      'hora': '19:00',
-      'categoria': 'Equipa Profissional',
-      'estadio': 'Estádio da Luz'
-    },
-    {
-      'time1': 'SC BRAGA',
-      'time2': 'VITÓRIA SC',
-      'data': '25/12/2024',
-      'hora': '19:00',
-      'categoria': 'Sub-23',
-      'estadio': 'Estádio Municipal Braga'
+      'jogador': 'Jogador 2',
+      'time1': 'Vitória SC',
+      'time2': 'SC Braga',
+      
     },
   ];
 
@@ -71,7 +51,8 @@ class _TarefasPageState extends State<TarefasPage> {
 
   void _searchTarefas(String query) {
     final filtered = tarefas.where((tarefa) {
-      return tarefa['time1']!.toLowerCase().contains(query.toLowerCase()) ||
+      return tarefa['jogador']!.toLowerCase().contains(query.toLowerCase()) ||
+          tarefa['time1']!.toLowerCase().contains(query.toLowerCase()) ||
           tarefa['time2']!.toLowerCase().contains(query.toLowerCase());
     }).toList();
 
@@ -100,7 +81,7 @@ class _TarefasPageState extends State<TarefasPage> {
                   controller: _searchController,
                   onChanged: _searchTarefas,
                   decoration: InputDecoration(
-                    labelText: 'Pesquisar Jogos',
+                    labelText: 'Pesquisar Jogador',
                     prefixIcon: const Icon(Icons.search),
                     border: const OutlineInputBorder(),
                     filled: true,
@@ -119,23 +100,28 @@ class _TarefasPageState extends State<TarefasPage> {
                 final tarefa = filteredTarefas[index];
                 return Card(
                   margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: ListTile(
-                    title: Text(
-                      '${tarefa['time1']} X ${tarefa['time2']}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Data: ${tarefa['data']}'),
-                        Text('Hora: ${tarefa['hora']}'),
-                        Text('Categoria: ${tarefa['categoria']}'),
-                        Text('Estádio: ${tarefa['estadio']}'),
+                        Text(
+                          '${tarefa['jogador']}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          '${tarefa['time1']} x ${tarefa['time2']}',
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
-                    onTap: () {
-                      print('Tarefa clicada: ${tarefa['time1']} X ${tarefa['time2']}');
-                    },
                   ),
                 );
               },
