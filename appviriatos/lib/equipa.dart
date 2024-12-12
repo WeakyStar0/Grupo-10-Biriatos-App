@@ -15,17 +15,17 @@ class _EquipaPageState extends State<EquipaPage> {
 
   final Map<String, List<String>> playerCategories = {
     'Guarda-redes': ['Jogador 1', 'Jogador 2', 'Jogador 3'],
-    'Defesas': ['Jogador 4', 'Jogador 5', 'Jogador 6', 'Jogador 7', 'Jogador 8'],
-    'Médios': ['Jogador 9', 'Jogador 10', 'Jogador 11'],
-    'Avançados': ['Jogador 12', 'Jogador 13', 'Jogador 14'],
+    'Defesa': ['Jogador 4', 'Jogador 5', 'Jogador 6', 'Jogador 7', 'Jogador 8'],
+    'Médio': ['Jogador 9', 'Jogador 10', 'Jogador 11'],
+    'Avançado': ['Jogador 12', 'Jogador 13', 'Jogador 14'],
   };
 
   // Mapa de cores associadas a cada categoria
   final Map<String, Color> categoryColors = {
     'Guarda-redes': Color(0xFFC39B44),
-    'Defesas': Color(0xFF2C9E8B),
-    'Médios': Color(0xFF2B8B39),
-    'Avançados': Color(0xFF9F574F),
+    'Defesa': Color(0xFF2C9E8B),
+    'Médio': Color(0xFF2B8B39),
+    'Avançado': Color(0xFF9F574F),
   };
 
   @override
@@ -57,16 +57,15 @@ class _EquipaPageState extends State<EquipaPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Título Académico de Viseu
             const SizedBox(height: 5),
             const Center(
               child: Text(
                 'Académico de Viseu',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                  fontFamily: 'FuturaStd',
                   color: Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 40,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -77,13 +76,12 @@ class _EquipaPageState extends State<EquipaPage> {
                 'Sub-19 Equipa A',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                  fontFamily: 'FuturaStd',
                   color: Color.fromARGB(255, 0, 0, 0),
                   fontSize: 20,
                 ),
               ),
             ),
-            // Barra de Pesquisa
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextField(
@@ -98,67 +96,64 @@ class _EquipaPageState extends State<EquipaPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Espaçamento antes dos jogadores
-
-            // Conteúdo com a lista de jogadores
+            const SizedBox(height: 0),
             Expanded(
               child: ListView(
                 children: playerCategories.keys.map((category) {
                   List<String> players = playerCategories[category]!;
                   Color categoryColor = categoryColors[category]!;
 
-                  // Filtra os jogadores com base na pesquisa
                   List<String> filteredCategoryPlayers = players
                       .where((player) => filteredPlayers.contains(player))
                       .toList();
 
-                  if (filteredCategoryPlayers.isEmpty) return Container(); // Não exibe nada se a categoria estiver vazia
+                  if (filteredCategoryPlayers.isEmpty) return Container();
 
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(3.0),
                         child: Text(
                           category,
                           style: TextStyle(
-                            fontSize: 20,
+                            fontFamily: 'FuturaStdHeavy',
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'FuturaStd', // Nome da fonte
                           ),
                         ),
                       ),
                       GridView.builder(
-                        shrinkWrap: true, // Permite o GridView se ajustar ao tamanho da tela
+                        shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // 3 jogadores por linha
-                          crossAxisSpacing: 8.0, // Espaçamento entre os itens
-                          mainAxisSpacing: 8.0, // Espaçamento entre as linhas
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 15.0,
                         ),
                         itemCount: filteredCategoryPlayers.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              // Navega para a página do jogador com o nome do jogador
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => JogadorPage(
-                                    jogadorNome: filteredCategoryPlayers[index], // Passa o nome do jogador
+                                    jogadorNome: filteredCategoryPlayers[index],
+                                    jogadorCategoria: category, // Passa a categoria
                                   ),
                                 ),
                               );
                             },
                             child: Card(
-                              color: categoryColor, // Define a cor do Card com base na categoria
+                              color: categoryColor,
                               margin: EdgeInsets.symmetric(vertical: 4.0),
                               elevation: 4.0,
                               child: Stack(
                                 children: [
                                   Center(
                                     child: Icon(
-                                      Icons.person, // Placeholder como ícone
+                                      Icons.person,
                                       size: 50,
                                       color: Colors.white.withOpacity(0.5),
                                     ),
@@ -170,9 +165,9 @@ class _EquipaPageState extends State<EquipaPage> {
                                       filteredCategoryPlayers[index],
                                       style: TextStyle(
                                         fontSize: 16,
-                                        color: Colors.white, // Cor do texto
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
-                                        fontFamily: 'Futura Std Bold', // Nome da fonte
+                                        fontFamily: 'Futura Std Bold',
                                       ),
                                     ),
                                   ),
@@ -182,6 +177,7 @@ class _EquipaPageState extends State<EquipaPage> {
                           );
                         },
                       ),
+                      if (category == 'Avançado') const SizedBox(height: 80),
                     ],
                   );
                 }).toList(),

@@ -76,6 +76,8 @@ flutter:
           weight: 700
         - asset: assets/fonts/FuturaStdBook.otf
           weight: 700
+        - asset: assets/fonts/FuturaStdHeavy.otf
+          weight: 700
 
   
 
