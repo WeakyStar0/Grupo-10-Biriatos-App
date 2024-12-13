@@ -83,42 +83,42 @@ class JogadorPage extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Jogador image section
-          Container(
-            alignment: Alignment.center,
-            height: 150,
-            width: 150,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[200], // Placeholder color for the image
-            ),
-            child: Icon(Icons.person, size: 80, color: Colors.black),
-          ),
           SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   jogadorNome,
                   style: TextStyle(
-                    fontSize: 28,
+                    fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'Portugal 🇵🇹', // Placeholder for country
+                  'Portugal 🇵🇹',
                   style: TextStyle(
+                    fontFamily: 'FuturaStd',
                     fontSize: 20,
-                    color: Colors.grey[700],
+                    color: const Color.fromARGB(255, 0, 0, 0),
                   ),
                 ),
-                SizedBox(height: 10),
               ],
             ),
           ),
           SizedBox(height: 20),
+
+          // Jogador image section
+          Center(
+            child: Container(
+              height: 290,
+              width: 290,
+              child: Icon(Icons.person, size: 290, color: Colors.black),
+            ),
+          ),
 
           // Retângulos com informações
           Stack(
@@ -182,78 +182,87 @@ class JogadorPage extends StatelessWidget {
           SizedBox(height: 20),
 
           Center(
-          child: Text(
-            'Gerir Perfil',
-            style: TextStyle(
-              fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
-              color: const Color.fromARGB(255, 0, 0, 0),
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+            child: Text(
+              'Gerir Perfil',
+              style: TextStyle(
+                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                color: const Color.fromARGB(255, 0, 0, 0),
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 15),
+          SizedBox(height: 15),
 
           // Botões de Contacto e Relatório
           Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Show contact info popup
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: Text('Contacto'),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('Telefone: 123456789'),
-                            Text('Nome: Mark António Nogueira Vicente de Pinho'),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop(); // Close the dialog
-                            },
-                            child: Text('OK'),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // Show contact info popup
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Contacto'),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('Telefone: 123456789'),
+                              Text('Nome: Mark António Nogueira Vicente de Pinho'),
+                            ],
                           ),
-                        ],
-                      );
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Close the dialog
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 27),
+                  ),
+                  child: const Text(
+                    'Contacto',
+                    style: 
+                    TextStyle(
+                    color: Colors.white, fontWeight: FontWeight.bold,
+                    fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                    fontSize: 17,
+                    ),
+                    
+                  ),
                 ),
-                child: const Text(
-                  'Contacto',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                ElevatedButton(
+                  onPressed: () {
+                    // Add reporting functionality here
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 27),
+                  ),
+                  child: const Text(
+                    'Criar Relatório',
+                    style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold,
+                      fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                      fontSize: 17,
+                      ),
+                  ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  // Add reporting functionality here
-                },
-                style: ElevatedButton.styleFrom(
-                  
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-                ),
-                child: const Text(
-                  'Criar Relatório',
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
         ],
       ),
       floatingActionButton: CustomFloatingButton(
