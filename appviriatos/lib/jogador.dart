@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
 import 'header.dart'; // Importa o CustomHeader
+import 'relatorio.dart'; // Importa a página Relatório
 
 class EquipaPage extends StatefulWidget {
   @override
@@ -114,9 +116,9 @@ class JogadorPage extends StatelessWidget {
           // Jogador image section
           Center(
             child: Container(
-              height: 290,
-              width: 290,
-              child: Icon(Icons.person, size: 290, color: Colors.black),
+              height: 100,
+              width: 100,
+              child: Icon(Icons.person, size: 100, color: Colors.black),
             ),
           ),
 
@@ -207,19 +209,43 @@ class JogadorPage extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Contacto'),
-                          content: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                          contentPadding: EdgeInsets.zero,
+                          content: Stack(
+                            clipBehavior: Clip.none,
                             children: [
-                              Text('Telefone: 123456789'),
-                              Text('Nome: Mark António Nogueira Vicente de Pinho'),
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Telefone: 123456789',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'Nome: Mark António Nogueira Vicente de Pinho',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: -40,
+                                left: 15,
+                                child: SvgPicture.asset(
+                                  'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
+                                  width: 80,
+                                  height: 80,
+                                ),
+                              ),
                             ],
                           ),
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop(); // Close the dialog
+                                Navigator.of(context).pop();
                               },
                               child: Text('OK'),
                             ),
@@ -234,18 +260,22 @@ class JogadorPage extends StatelessWidget {
                   ),
                   child: const Text(
                     'Contacto',
-                    style: 
-                    TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.bold,
-                    fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
-                    fontSize: 17,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'FuturaStd',
+                      fontSize: 17,
                     ),
-                    
                   ),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Add reporting functionality here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RelatorioPage(),
+                      ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -254,10 +284,11 @@ class JogadorPage extends StatelessWidget {
                   child: const Text(
                     'Criar Relatório',
                     style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold,
-                      fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'FuturaStd',
                       fontSize: 17,
-                      ),
+                    ),
                   ),
                 ),
               ],

@@ -11,27 +11,78 @@ class ClubesPage extends StatefulWidget {
 class _ClubesPageState extends State<ClubesPage> {
   final List<Map<String, dynamic>> clubes = [
     {
-      'nome': 'Académico de Viseu', 
+      'nome': 'Académico de Viseu',
       'ranks': [
-        {'nome': 'Equipa Profissional', 'jogadores': ['']},
-        {'nome': 'Sub-23', 'jogadores': ['']},
+        {'nome': 'Equipa Profissional', 'jogadores': []},
+        {'nome': 'Sub-23', 'jogadores': []},
         {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
-        {'nome': 'Formação masculino', 'jogadores': ['Sub - 16 A', 'Sub - 16 B', 'Sub - 14', 'Sub -13', 'Sub - 12 A', 'Sub - 12 B', 'Sub - 11', 'Sub - 10']},
-        {'nome': 'Formação feminino', 'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']},
+        {
+          'nome': 'Formação masculino',
+          'jogadores': [
+            'Sub - 16 A',
+            'Sub - 16 B',
+            'Sub - 14',
+            'Sub -13',
+            'Sub - 12 A',
+            'Sub - 12 B',
+            'Sub - 11',
+            'Sub - 10'
+          ]
+        },
+        {
+          'nome': 'Formação feminino',
+          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
+        },
       ],
     },
     {
       'nome': 'FC Porto',
       'ranks': [
-        {'nome': 'Rank 1', 'jogadores': ['Miguel Santos', 'Rui Almeida']},
-        {'nome': 'Rank 3', 'jogadores': ['André Matos', 'Vitor Sousa']}
+        {'nome': 'Equipa Profissional', 'jogadores': []},
+        {'nome': 'Sub-23', 'jogadores': []},
+        {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
+        {
+          'nome': 'Formação masculino',
+          'jogadores': [
+            'Sub - 16 A',
+            'Sub - 16 B',
+            'Sub - 14',
+            'Sub -13',
+            'Sub - 12 A',
+            'Sub - 12 B',
+            'Sub - 11',
+            'Sub - 10'
+          ]
+        },
+        {
+          'nome': 'Formação feminino',
+          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
+        },
       ],
     },
     {
-      'nome': 'Sl Benfica',
+      'nome': 'SL Benfica',
       'ranks': [
-        {'nome': 'Rank 2', 'jogadores': ['Hugo Leite', 'Tiago Nunes']},
-        {'nome': 'Rank 4', 'jogadores': ['Joana Costa', 'Ana Marques']}
+        {'nome': 'Equipa Profissional', 'jogadores': []},
+        {'nome': 'Sub-23', 'jogadores': []},
+        {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
+        {
+          'nome': 'Formação masculino',
+          'jogadores': [
+            'Sub - 16 A',
+            'Sub - 16 B',
+            'Sub - 14',
+            'Sub -13',
+            'Sub - 12 A',
+            'Sub - 12 B',
+            'Sub - 11',
+            'Sub - 10'
+          ]
+        },
+        {
+          'nome': 'Formação feminino',
+          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
+        },
       ],
     },
   ];
@@ -101,28 +152,50 @@ class _ClubesPageState extends State<ClubesPage> {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     children: clube['ranks'].map<Widget>((rank) {
-                      return ExpansionTile(
-                        title: Text(
-                          rank['nome'],
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        children: rank['jogadores'].map<Widget>((jogador) {
-                          return ListTile(
-                            title: Text(jogador),
-                            onTap: () {
-                              if (rank['nome'] == 'Sub-19' && jogador == 'Equipa A') {
-                                // Navegar para a página de Equipa apenas para "Equipa A"
+                      // Verifica se o rank tem jogadores
+                      if (rank['jogadores'].isEmpty) {
+                        // Renderiza como ListTile clicável
+                        return ListTile(
+                          title: Text(rank['nome']),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EquipaPage(
+                                  clubeNome: clube['nome'],
+                                  escalaoNome: rank['nome'],
+                                  equipaNome: '', // Nenhum jogador específico
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        // Renderiza como ExpansionTile
+                        return ExpansionTile(
+                          title: Text(
+                            rank['nome'],
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          children: rank['jogadores'].map<Widget>((jogador) {
+                            return ListTile(
+                              title: Text(jogador),
+                              onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EquipaPage(),
+                                    builder: (context) => EquipaPage(
+                                      clubeNome: clube['nome'],
+                                      escalaoNome: rank['nome'],
+                                      equipaNome: jogador,
+                                    ),
                                   ),
                                 );
-                              }
-                            },
-                          );
-                        }).toList(),
-                      );
+                              },
+                            );
+                          }).toList(),
+                        );
+                      }
                     }).toList(),
                   ),
                 );

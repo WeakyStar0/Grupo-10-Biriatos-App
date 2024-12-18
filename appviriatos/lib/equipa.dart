@@ -4,6 +4,12 @@ import 'header.dart'; // Importa o CustomHeader
 import 'jogador.dart'; // Importa a página do jogador
 
 class EquipaPage extends StatefulWidget {
+  final String clubeNome;
+  final String escalaoNome;
+  final String equipaNome;
+
+  EquipaPage({required this.clubeNome, required this.escalaoNome, required this.equipaNome});
+
   @override
   _EquipaPageState createState() => _EquipaPageState();
 }
@@ -58,9 +64,9 @@ class _EquipaPageState extends State<EquipaPage> {
         child: Column(
           children: [
             const SizedBox(height: 5),
-            const Center(
+            Center(
               child: Text(
-                'Académico de Viseu',
+                widget.clubeNome,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'FuturaStd',
@@ -71,9 +77,9 @@ class _EquipaPageState extends State<EquipaPage> {
               ),
             ),
             const SizedBox(height: 5),
-            const Center(
+            Center(
               child: Text(
-                'Sub-19 Equipa A',
+                '${widget.escalaoNome} ${widget.equipaNome}',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'FuturaStd',
