@@ -151,7 +151,7 @@ class JogadorPage extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          'Equipa:',
+                          'Equipa: ',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         Text('Sub-19', style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -169,7 +169,7 @@ class JogadorPage extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          'Data de Nascimento:',
+                          'Data de \n Nascimento:',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         Text('15/10/2006', style: TextStyle(fontSize: 16, color: Colors.white)),
@@ -194,100 +194,154 @@ class JogadorPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 30),
 
           // Botões de Contacto e Relatório
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center, // Centraliza os botões
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Show contact info popup
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          contentPadding: EdgeInsets.zero,
-                          content: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Telefone: 123456789',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Nome: Mark António Nogueira Vicente de Pinho',
-                                      style: TextStyle(fontSize: 16),
-                                    ),
-                                  ],
+                Container(
+                  width: 200, // Define uma largura fixa para o botão
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Show contact info popup
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            contentPadding: EdgeInsets.all(17),
+                            content: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 70.0, vertical: 5.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Telefone: ',
+                                              style: TextStyle(
+                                                fontFamily: 'FuturaStd',
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: '123456789',
+                                              style: TextStyle(
+                                                fontFamily: 'FuturaStd',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Nome: ',
+                                              style: TextStyle(
+                                                fontFamily: 'FuturaStd',
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'Nome do Contacto',
+                                              style: TextStyle(
+                                                fontFamily: 'FuturaStd',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Positioned(
-                                top: -40,
-                                left: 15,
-                                child: SvgPicture.asset(
-                                  'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
-                                  width: 80,
-                                  height: 80,
+                                Positioned(
+                                  top: -55,
+                                  left: -14,
+                                  child: SvgPicture.asset(
+                                    'web/icons/LOGO_Academico_Viseu_FC_fixed.svg',
+                                    width: 90,
+                                    height: 90,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                ),
+                                child: const Text(
+                                  'Ok',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'FuturaStd',
+                                    fontSize: 10,
+                                  ),
                                 ),
                               ),
                             ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 27),
-                  ),
-                  child: const Text(
-                    'Contacto',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'FuturaStd',
-                      fontSize: 17,
+                          );
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 17), // Diminuindo o padding horizontal
+                    ),
+                    child: const Text(
+                      'Contacto',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'FuturaStd',
+                        fontSize: 17,
+                      ),
                     ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => RelatorioPage(),
+                SizedBox(width: 10), // Espaçamento entre os botões
+                Container(
+                  width: 200, // Define uma largura fixa para o botão
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RelatorioPage(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 17), // Diminuindo o padding horizontal
+                    ),
+                    child: const Text(
+                      'Criar Relatório',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'FuturaStd',
+                        fontSize: 17,
                       ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 27),
-                  ),
-                  child: const Text(
-                    'Criar Relatório',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'FuturaStd',
-                      fontSize: 17,
                     ),
                   ),
                 ),
