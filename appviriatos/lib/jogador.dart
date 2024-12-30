@@ -129,7 +129,7 @@ class JogadorPage extends StatelessWidget {
               // Retângulos
               Container(
                 width: double.infinity,
-                height: 150,
+                height: 170,
                 color: const Color.fromARGB(255, 0, 0, 0),
               ),
               Container(
@@ -203,7 +203,7 @@ class JogadorPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center, // Centraliza os botões
               children: [
                 Container(
-                  width: 200, // Define uma largura fixa para o botão
+                  width: 150, // Define uma largura fixa para o botão
                   child: ElevatedButton(
                     onPressed: () {
                       // Show contact info popup
@@ -305,7 +305,7 @@ class JogadorPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 17), // Diminuindo o padding horizontal
+                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5), // Diminuindo o padding horizontal
                     ),
                     child: const Text(
                       'Contacto',
@@ -318,9 +318,9 @@ class JogadorPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 10), // Espaçamento entre os botões
+                SizedBox(width: 15), // Espaçamento entre os botões
                 Container(
-                  width: 200, // Define uma largura fixa para o botão
+                  width: 170, // Define uma largura fixa para o botão
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -332,7 +332,7 @@ class JogadorPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 17), // Diminuindo o padding horizontal
+                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5), // Diminuindo o padding horizontal
                     ),
                     child: const Text(
                       'Criar Relatório',
