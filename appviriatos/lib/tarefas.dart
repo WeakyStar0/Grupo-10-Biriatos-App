@@ -78,7 +78,7 @@ class _TarefasPageState extends State<TarefasPage> {
           // Título
           const Center(
             child: Text(
-              'Tarefas',
+              'TAREFAS',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml

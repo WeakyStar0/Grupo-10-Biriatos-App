@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http; // Biblioteca para HTTP requests
 import 'navbutton.dart'; // Importa o widget e a lógica de navegação
 import 'header.dart'; // Importa o CustomHeader
 import 'equipa.dart'; // Importa a página de Equipa
@@ -9,94 +11,45 @@ class ClubesPage extends StatefulWidget {
 }
 
 class _ClubesPageState extends State<ClubesPage> {
-  final List<Map<String, dynamic>> clubes = [
-    {
-      'nome': 'Académico de Viseu',
-      'ranks': [
-        {'nome': 'Equipa Profissional', 'jogadores': []},
-        {'nome': 'Sub-23', 'jogadores': []},
-        {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
-        {
-          'nome': 'Formação masculino',
-          'jogadores': [
-            'Sub - 16 A',
-            'Sub - 16 B',
-            'Sub - 14',
-            'Sub -13',
-            'Sub - 12 A',
-            'Sub - 12 B',
-            'Sub - 11',
-            'Sub - 10'
-          ]
-        },
-        {
-          'nome': 'Formação feminino',
-          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
-        },
-      ],
-    },
-    {
-      'nome': 'FC Porto',
-      'ranks': [
-        {'nome': 'Equipa Profissional', 'jogadores': []},
-        {'nome': 'Sub-23', 'jogadores': []},
-        {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
-        {
-          'nome': 'Formação masculino',
-          'jogadores': [
-            'Sub - 16 A',
-            'Sub - 16 B',
-            'Sub - 14',
-            'Sub -13',
-            'Sub - 12 A',
-            'Sub - 12 B',
-            'Sub - 11',
-            'Sub - 10'
-          ]
-        },
-        {
-          'nome': 'Formação feminino',
-          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
-        },
-      ],
-    },
-    {
-      'nome': 'SL Benfica',
-      'ranks': [
-        {'nome': 'Equipa Profissional', 'jogadores': []},
-        {'nome': 'Sub-23', 'jogadores': []},
-        {'nome': 'Sub-19', 'jogadores': ['Equipa A', 'Equipa B']},
-        {
-          'nome': 'Formação masculino',
-          'jogadores': [
-            'Sub - 16 A',
-            'Sub - 16 B',
-            'Sub - 14',
-            'Sub -13',
-            'Sub - 12 A',
-            'Sub - 12 B',
-            'Sub - 11',
-            'Sub - 10'
-          ]
-        },
-        {
-          'nome': 'Formação feminino',
-          'jogadores': ['Seniores', 'Sub - 19', 'Sub - 15', 'Sub - 13']
-        },
-      ],
-    },
-  ];
-
+  List<dynamic> clubes = []; // Lista dinâmica para armazenar os clubes
   String searchQuery = ''; // Variável de pesquisa
   int _currentIndex = 0; // Índice atual da página (Clubes = 0)
+  bool isLoading = true; // Estado para controlar o carregamento
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClubes(); // Chama a função para buscar os dados ao iniciar
+  }
+
+  Future<void> fetchClubes() async {
+    const url = 'http://192.168.1.66:3000/teams'; // URL da API
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          clubes = json.decode(response.body); // Decodifica o JSON recebido
+          isLoading = false; // Finaliza o carregamento
+        });
+      } else {
+        throw Exception('Falha ao carregar os clubes');
+      }
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Erro ao buscar clubes: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Filtra os clubes de acordo com a pesquisa
-    final filteredClubes = clubes
-        .where((clube) =>
-            clube['nome'].toLowerCase().contains(searchQuery.toLowerCase()))
-        .toList();
+    final filteredClubes = clubes.where((clube) {
+      return clube['teamName']
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase());
+    }).toList();
 
     return Scaffold(
       appBar: CustomHeader(
@@ -104,106 +57,77 @@ class _ClubesPageState extends State<ClubesPage> {
           Navigator.pop(context); // Voltar à página anterior
         },
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 25),
-          // Título
-          const Center(
-            child: Text(
-              'CLUBES',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
-                color: Color.fromARGB(255, 0, 0, 0),
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 5),
-          // Campo de pesquisa
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TextField(
-              decoration: InputDecoration(
-                labelText: 'Pesquisar clube',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.search),
-              ),
-              onChanged: (query) {
-                setState(() {
-                  searchQuery = query;
-                });
-              },
-            ),
-          ),
-          // Lista de clubes filtrados
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredClubes.length,
-              itemBuilder: (context, index) {
-                final clube = filteredClubes[index];
-                return Card(
-                  margin: EdgeInsets.all(8.0),
-                  child: ExpansionTile(
-                    title: Text(
-                      clube['nome'],
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator()) // Indicador de carregamento
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 25),
+                // Título
+                const Center(
+                  child: Text(
+                    'CLUBES',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
                     ),
-                    children: clube['ranks'].map<Widget>((rank) {
-                      // Verifica se o rank tem jogadores
-                      if (rank['jogadores'].isEmpty) {
-                        // Renderiza como ListTile clicável
-                        return ListTile(
-                          title: Text(rank['nome']),
+                  ),
+                ),
+                const SizedBox(height: 5),
+                // Campo de pesquisa
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Pesquisar clube',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.search),
+                    ),
+                    onChanged: (query) {
+                      setState(() {
+                        searchQuery = query;
+                      });
+                    },
+                  ),
+                ),
+                // Lista de clubes filtrados
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: filteredClubes.length,
+                    itemBuilder: (context, index) {
+                      final clube = filteredClubes[index];
+                      return Card(
+                        margin: EdgeInsets.all(8.0),
+                        child: ListTile(
+                          title: Text(
+                            clube['teamName'],
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EquipaPage(
-                                  clubeNome: clube['nome'],
-                                  escalaoNome: rank['nome'],
-                                  equipaNome: '', // Nenhum jogador específico
+                                  clubeNome: clube['teamName'],
+                                  escalaoNome: 'Detalhes não disponíveis',
+                                  equipaNome: '',
                                 ),
                               ),
                             );
                           },
-                        );
-                      } else {
-                        // Renderiza como ExpansionTile
-                        return ExpansionTile(
-                          title: Text(
-                            rank['nome'],
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          children: rank['jogadores'].map<Widget>((jogador) {
-                            return ListTile(
-                              title: Text(jogador),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EquipaPage(
-                                      clubeNome: clube['nome'],
-                                      escalaoNome: rank['nome'],
-                                      equipaNome: jogador,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        );
-                      }
-                    }).toList(),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       // Botão de navegação flutuante
       floatingActionButton: CustomFloatingButton(
         currentIndex: _currentIndex,
