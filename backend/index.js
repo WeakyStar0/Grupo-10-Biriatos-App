@@ -138,15 +138,18 @@ app.post('/teams', async (req, res) => {
   }
 });
 
-// Rota para obter todos os times
+
+// Rota para obter todas as equipas
 app.get('/teams', async (req, res) => {
   try {
-    const teams = await Team.find(); // Busca todos os times
-    res.status(200).json(teams); // Retorna como JSON
+    const teams = await Team.find();
+    res.status(200).json(teams);
   } catch (error) {
-    res.status(500).json({ message: 'Erro ao buscar os times', error });
+    console.error('Erro ao buscar equipes:', error);
+    res.status(500).json({ error: 'Erro ao buscar equipes.' });
   }
 });
+
 
 
 app.get('/teams/:teamId/athletes', async (req, res) => {
