@@ -62,4 +62,17 @@ router.delete('/:athleteId', async (req, res) => {
   }
 });
 
+
+app.get('/teams/:teamId/athletes', async (req, res) => {
+  const teamId = parseInt(req.params.teamId); // Converte o parâmetro para número
+  try {
+    const athletes = await Athlete.find({ teamId }); // Filtra os atletas pelo `teamId`
+    res.status(200).json(athletes);
+  } catch (error) {
+    console.error('Erro ao buscar atletas do time:', error);
+    res.status(500).json({ error: 'Erro ao buscar atletas do time.' });
+  }
+});
+
+
 module.exports = router;
