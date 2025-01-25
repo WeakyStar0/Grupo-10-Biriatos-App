@@ -188,6 +188,7 @@ class _EquipaPageState extends State<EquipaPage> {
                                         builder: (context) => JogadorPage(
                                           jogadorNome: player['fullName'],
                                           jogadorCategoria: category,
+                                          clubeNome: widget.clubeNome, // Passa o nome do clube
                                         ),
                                       ),
                                     );

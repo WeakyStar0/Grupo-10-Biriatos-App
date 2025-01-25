@@ -46,6 +46,7 @@ class _EquipaPageState extends State<EquipaPage> {
                     builder: (context) => JogadorPage(
                       jogadorNome: jogadorNome,
                       jogadorCategoria: jogadorCategoria, // Passa a categoria
+                      clubeNome: "Nome do Clube", // Passa o nome do clube
                     ),
                   ),
                 );
@@ -66,12 +67,14 @@ class _EquipaPageState extends State<EquipaPage> {
 
 class JogadorPage extends StatelessWidget {
   final String jogadorNome; // Variável para armazenar o nome do jogador
-  final String jogadorCategoria; // Nova variável para a categoria do jogador
+  final String jogadorCategoria; // Variável para a categoria do jogador
+  final String clubeNome; // Nome do clube, recebido da EquipaPage
 
-  // Construtor para receber o nome e a categoria do jogador
+  // Construtor para receber o nome do jogador, a categoria e o nome do clube
   JogadorPage({
     required this.jogadorNome,
     required this.jogadorCategoria,
+    required this.clubeNome,
   });
 
   @override
@@ -154,7 +157,8 @@ class JogadorPage extends StatelessWidget {
                           'Equipa: ',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                        Text('Sub-19', style: TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(clubeNome, // Substitui "Sub-19" pelo nome do clube
+                            style: TextStyle(fontSize: 16, color: Colors.white)),
                       ],
                     ),
                     Column(
@@ -163,7 +167,7 @@ class JogadorPage extends StatelessWidget {
                           'Posição:',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                        Text(jogadorCategoria, style: TextStyle(fontSize: 16, color: Colors.white)), // Usando categoria
+                        Text(jogadorCategoria, style: TextStyle(fontSize: 16, color: Colors.white)),
                       ],
                     ),
                     Column(
