@@ -189,7 +189,8 @@ class _EquipaPageState extends State<EquipaPage> {
                                           jogadorNome: player['fullName'],
                                           jogadorCategoria: category,
                                           clubeNome: widget.clubeNome,
-                                          dataNascimento: player['dateOfBirth'], // Enviar data de nascimento
+                                          dataNascimento: player['dateOfBirth'],
+                                          jogadorNacionalidade: player['nationality'] ?? 'Desconhecido',
                                         ),
                                       ),
                                     );

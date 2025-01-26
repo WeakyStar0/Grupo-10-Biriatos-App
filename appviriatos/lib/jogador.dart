@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart'; // Importa a biblioteca intl para formatação de datas
-import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
-import 'header.dart'; // Importa o CustomHeader
-import 'relatorio.dart'; // Importa a página Relatório
+import 'package:intl/intl.dart';
+import 'navbutton.dart';
+import 'header.dart';
+import 'relatorio.dart';
 
 class JogadorPage extends StatelessWidget {
-  final String jogadorNome; // Nome do jogador
-  final String jogadorCategoria; // Categoria do jogador
-  final String clubeNome; // Nome do clube
-  final String dataNascimento; // Data de nascimento do jogador
+  final String jogadorNome;
+  final String jogadorCategoria;
+  final String clubeNome;
+  final String dataNascimento;
+  final String jogadorNacionalidade;
 
-  // Construtor para receber informações do jogador
   JogadorPage({
     required this.jogadorNome,
     required this.jogadorCategoria,
     required this.clubeNome,
     required this.dataNascimento,
+    required this.jogadorNacionalidade,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Formata a dataNascimento para o formato DD-MM-YYYY
     String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(dataNascimento));
 
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
-          Navigator.pop(context); // Voltar à página anterior
+          Navigator.pop(context);
         },
       ),
       body: Column(
@@ -48,7 +48,7 @@ class JogadorPage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Portugal 🇵🇹',
+                  jogadorNacionalidade,
                   style: TextStyle(
                     fontFamily: 'FuturaStd',
                     fontSize: 20,
@@ -59,8 +59,6 @@ class JogadorPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-
-          // Imagem do jogador
           Center(
             child: Container(
               height: 100,
@@ -68,8 +66,6 @@ class JogadorPage extends StatelessWidget {
               child: Icon(Icons.person, size: 100, color: Colors.black),
             ),
           ),
-
-          // Retângulos com informações
           Stack(
             alignment: Alignment.center,
             children: [
@@ -118,7 +114,7 @@ class JogadorPage extends StatelessWidget {
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         Text(
-                          formattedDate, // Exibe a data de nascimento já formatada
+                          formattedDate,
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                       ],
@@ -141,18 +137,15 @@ class JogadorPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 30),
-
-          // Botões de Contacto e Relatório
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Centraliza os botões
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: 150, // Define uma largura fixa para o botão
+                  width: 150,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Exibir informações de contacto
                       showDialog(
                         context: context,
                         builder: (context) {
