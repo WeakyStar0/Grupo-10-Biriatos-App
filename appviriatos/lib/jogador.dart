@@ -1,84 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart'; // Importa a biblioteca intl para formatação de datas
 import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
 import 'header.dart'; // Importa o CustomHeader
 import 'relatorio.dart'; // Importa a página Relatório
 
-class EquipaPage extends StatefulWidget {
-  @override
-  _EquipaPageState createState() => _EquipaPageState();
-}
-
-class _EquipaPageState extends State<EquipaPage> {
-  int _currentIndex = 4; // Índice atual da página
-
-  // Lista de jogadores de exemplo com categorias
-  final Map<String, String> jogadores = {
-    'Jogador 1': 'Guarda-redes',
-    'Jogador 2': 'Defesas',
-    'Jogador 3': 'Médios',
-    'Jogador 4': 'Avançados',
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomHeader(
-        onBack: () {
-          Navigator.pop(context); // Voltar à página anterior
-        },
-      ),
-      body: ListView.builder(
-        itemCount: jogadores.length,
-        itemBuilder: (context, index) {
-          String jogadorNome = jogadores.keys.elementAt(index);
-          String jogadorCategoria = jogadores[jogadorNome]!;
-          return Card(
-            margin: EdgeInsets.zero, // Remove margens externas
-            elevation: 4.0,
-            child: ListTile(
-              title: Text(jogadorNome),
-              onTap: () {
-                // Navegar para a página do jogador ao clicar
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JogadorPage(
-                      jogadorNome: jogadorNome,
-                      jogadorCategoria: jogadorCategoria, // Passa a categoria
-                      clubeNome: "Nome do Clube", // Passa o nome do clube
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-      // Botão de navegação flutuante
-      floatingActionButton: CustomFloatingButton(
-        currentIndex: _currentIndex,
-        onTap: (index) => navigateToPage(context, index),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    );
-  }
-}
-
 class JogadorPage extends StatelessWidget {
-  final String jogadorNome; // Variável para armazenar o nome do jogador
-  final String jogadorCategoria; // Variável para a categoria do jogador
-  final String clubeNome; // Nome do clube, recebido da EquipaPage
+  final String jogadorNome; // Nome do jogador
+  final String jogadorCategoria; // Categoria do jogador
+  final String clubeNome; // Nome do clube
+  final String dataNascimento; // Data de nascimento do jogador
 
-  // Construtor para receber o nome do jogador, a categoria e o nome do clube
+  // Construtor para receber informações do jogador
   JogadorPage({
     required this.jogadorNome,
     required this.jogadorCategoria,
     required this.clubeNome,
+    required this.dataNascimento,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Formata a dataNascimento para o formato DD-MM-YYYY
+    String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(dataNascimento));
+
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
@@ -91,13 +36,12 @@ class JogadorPage extends StatelessWidget {
           SizedBox(height: 20),
           Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   jogadorNome,
                   style: TextStyle(
-                    fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                    fontFamily: 'FuturaStd',
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -116,7 +60,7 @@ class JogadorPage extends StatelessWidget {
           ),
           SizedBox(height: 20),
 
-          // Jogador image section
+          // Imagem do jogador
           Center(
             child: Container(
               height: 100,
@@ -129,7 +73,6 @@ class JogadorPage extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              // Retângulos
               Container(
                 width: double.infinity,
                 height: 170,
@@ -145,7 +88,6 @@ class JogadorPage extends StatelessWidget {
                 height: 110,
                 color: const Color.fromARGB(255, 0, 0, 0),
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Row(
@@ -154,11 +96,10 @@ class JogadorPage extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          'Equipa: ',
+                          'Equipa:',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                        Text(clubeNome, // Substitui "Sub-19" pelo nome do clube
-                            style: TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(clubeNome, style: TextStyle(fontSize: 16, color: Colors.white)),
                       ],
                     ),
                     Column(
@@ -173,10 +114,13 @@ class JogadorPage extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          'Data de \n Nascimento:',
+                          'Data de \nNascimento:',
                           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
-                        Text('15/10/2006', style: TextStyle(fontSize: 16, color: Colors.white)),
+                        Text(
+                          formattedDate, // Exibe a data de nascimento já formatada
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
                       ],
                     ),
                   ],
@@ -184,14 +128,12 @@ class JogadorPage extends StatelessWidget {
               ),
             ],
           ),
-
           SizedBox(height: 20),
-
           Center(
             child: Text(
               'Gerir Perfil',
               style: TextStyle(
-                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                fontFamily: 'FuturaStd',
                 color: const Color.fromARGB(255, 0, 0, 0),
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -210,7 +152,7 @@ class JogadorPage extends StatelessWidget {
                   width: 150, // Define uma largura fixa para o botão
                   child: ElevatedButton(
                     onPressed: () {
-                      // Show contact info popup
+                      // Exibir informações de contacto
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -309,7 +251,7 @@ class JogadorPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5), // Diminuindo o padding horizontal
+                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5),
                     ),
                     child: const Text(
                       'Contacto',
@@ -322,9 +264,9 @@ class JogadorPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 15), // Espaçamento entre os botões
+                SizedBox(width: 15),
                 Container(
-                  width: 170, // Define uma largura fixa para o botão
+                  width: 170,
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -336,7 +278,7 @@ class JogadorPage extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
-                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5), // Diminuindo o padding horizontal
+                      padding: const EdgeInsets.symmetric(vertical: 17, horizontal: 5),
                     ),
                     child: const Text(
                       'Criar Relatório',

@@ -7,7 +7,7 @@ import 'jogador.dart';
 
 class EquipaPage extends StatefulWidget {
   final String clubeNome;
-  final int teamId; // ID do time para buscar os atletas
+  final int teamId;
   final String escalaoNome;
   final String equipaNome;
 
@@ -39,7 +39,7 @@ class _EquipaPageState extends State<EquipaPage> {
   @override
   void initState() {
     super.initState();
-    fetchAtletas(); // Buscar atletas ao iniciar a página
+    fetchAtletas();
   }
 
   Future<void> fetchAtletas() async {
@@ -49,7 +49,7 @@ class _EquipaPageState extends State<EquipaPage> {
       if (response.statusCode == 200) {
         setState(() {
           atletas = json.decode(response.body);
-          filteredAtletas = atletas; // Inicialmente, todos os atletas são exibidos
+          filteredAtletas = atletas;
           isLoading = false;
         });
       } else {
@@ -188,7 +188,8 @@ class _EquipaPageState extends State<EquipaPage> {
                                         builder: (context) => JogadorPage(
                                           jogadorNome: player['fullName'],
                                           jogadorCategoria: category,
-                                          clubeNome: widget.clubeNome, // Passa o nome do clube
+                                          clubeNome: widget.clubeNome,
+                                          dataNascimento: player['dateOfBirth'], // Enviar data de nascimento
                                         ),
                                       ),
                                     );
@@ -230,7 +231,7 @@ class _EquipaPageState extends State<EquipaPage> {
                       }).toList(),
                     ),
                   ),
-                  const SizedBox(height: 63), // Adicionado espaço extra
+                  const SizedBox(height: 63),
                 ],
               ),
             ),

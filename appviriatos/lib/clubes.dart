@@ -110,18 +110,18 @@ class _ClubesPageState extends State<ClubesPage> {
                             ),
                           ),
                           onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => EquipaPage(
-        clubeNome: clube['teamName'],
-        teamId: clube['teamId'],
-        escalaoNome: 'Detalhes não disponíveis',
-        equipaNome: '',
-      ),
-    ),
-  );
-},
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EquipaPage(
+                                clubeNome: clube['teamName'],
+                                teamId: clube['teamId'],
+                                escalaoNome: 'Detalhes não disponíveis',
+                                equipaNome: '',
+                              ),
+                            ),
+                          );
+                        },
 
                         ),
                       );
