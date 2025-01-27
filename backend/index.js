@@ -168,14 +168,40 @@ app.post('/agents', async (req, res) => {
   }
 });
 
-app.get('/agents', async (req, res) => {
+// Rota para buscar informações do agente pelo nome do jogador
+app.get('/agentInfo', async (req, res) => {
+  const { playerName } = req.query;
+
+  if (!playerName) {
+    return res.status(400).json({ error: 'Nome do jogador é obrigatório.' });
+  }
+
   try {
-    const agents = await Agent.find();
-    res.status(200).send(agents);
+    // Buscar jogador pelo nome
+    const athlete = await Athlete.findOne({ fullName: playerName });
+
+    if (!athlete) {
+      return res.status(404).json({ error: 'Jogador não encontrado.' });
+    }
+
+    // Buscar agente pelo agentId associado ao jogador
+    const agent = await Agent.findOne({ agentId: athlete.agentId });
+
+    if (!agent) {
+      return res.status(404).json({ error: 'Agente não encontrado para o jogador informado.' });
+    }
+
+    // Retornar as informações do agente
+    res.status(200).json({
+      name: agent.agentName,
+      phone: agent.contactInfo,
+    });
   } catch (error) {
-    res.status(500).send(error);
+    console.error('Erro ao buscar informações do agente:', error);
+    res.status(500).json({ error: 'Erro ao buscar informações do agente.' });
   }
 });
+
 
 // CRUD para relatórios
 app.post('/reports', async (req, res) => {

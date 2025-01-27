@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'navbutton.dart';
 import 'header.dart';
 import 'relatorio.dart';
@@ -19,6 +21,25 @@ class JogadorPage extends StatelessWidget {
     required this.dataNascimento,
     required this.jogadorNacionalidade,
   });
+
+  Future<Map<String, String>> fetchAgentInfo(String playerName) async {
+    final url = 'http://192.168.1.66:3000/agentInfo?playerName=$playerName';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return {
+          'phone': data['phone'] ?? 'Desconhecido',
+          'name': data['name'] ?? 'Desconhecido',
+        };
+      } else {
+        throw Exception('Falha ao carregar informações do agente');
+      }
+    } catch (error) {
+      print('Erro ao buscar informações do agente: $error');
+      return {'phone': 'Erro', 'name': 'Erro'};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +166,8 @@ class JogadorPage extends StatelessWidget {
                 Container(
                   width: 150,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      final agentInfo = await fetchAgentInfo(jogadorNome);
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -164,7 +186,7 @@ class JogadorPage extends StatelessWidget {
                                         text: TextSpan(
                                           children: [
                                             TextSpan(
-                                              text: 'Telefone: ',
+                                              text: 'Contacto: ',
                                               style: TextStyle(
                                                 fontFamily: 'FuturaStd',
                                                 fontWeight: FontWeight.normal,
@@ -172,7 +194,7 @@ class JogadorPage extends StatelessWidget {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: '123456789',
+                                              text: agentInfo['phone'],
                                               style: TextStyle(
                                                 fontFamily: 'FuturaStd',
                                                 fontWeight: FontWeight.bold,
@@ -195,7 +217,7 @@ class JogadorPage extends StatelessWidget {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: 'Nome do Contacto',
+                                              text: agentInfo['name'],
                                               style: TextStyle(
                                                 fontFamily: 'FuturaStd',
                                                 fontWeight: FontWeight.bold,
