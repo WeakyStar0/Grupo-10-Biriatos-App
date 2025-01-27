@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'navbutton.dart'; // Importa o navbutton para o botão de navegação
+import 'header.dart'; // Importa o CustomHeader
 
 void main() {
   runApp(const CriarJogador());
@@ -12,7 +14,7 @@ class CriarJogador extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: CriarJogadorPage(),
     );
@@ -20,7 +22,7 @@ class CriarJogador extends StatelessWidget {
 }
 
 class CriarJogadorPage extends StatefulWidget {
-  CriarJogadorPage({Key? key}) : super(key: key);
+  const CriarJogadorPage({Key? key}) : super(key: key);
 
   @override
   _CriarJogadorPageState createState() => _CriarJogadorPageState();
@@ -103,7 +105,7 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
         if (response.statusCode == 201) {
           print('Jogador criado: ${response.body}');
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Jogador criado com sucesso!')),
+            const SnackBar(content: Text('Jogador criado com sucesso!')),
           );
         } else {
           print('Erro na criação: ${response.body}');
@@ -123,61 +125,89 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Criar Jogador'),
-        backgroundColor: Colors.black,
+      appBar: CustomHeader(
+        onBack: () {
+          Navigator.pop(context); // Voltar para a página anterior
+        },
       ),
+      backgroundColor: Colors.white,
       body: _isLoadingClubes
-          ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: SingleChildScrollView(
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildTextField('Nome', '', _nomeController),
-                      const SizedBox(height: 5),
-                      _buildDateField('Data de Nascimento', _dataController, context),
-                      const SizedBox(height: 5),
-                      _buildDropdownField('Posição', _posicoes, _posicaoSelecionada, (String? novoValor) {
-                        _posicaoSelecionada = novoValor;
-                      }),
-                      const SizedBox(height: 5),
-                      _buildDropdownField('Nacionalidade', _paises, _paisSelecionado, (String? novoValor) {
-                        _paisSelecionado = novoValor;
-                      }),
-                      const SizedBox(height: 5),
-                      _buildDropdownField(
-                        'Clube',
-                        _clubes.map((c) => c['teamName'] as String).toList(),
-                        _clubeSelecionado,
-                        (String? novoValor) {
-                          _clubeSelecionado = novoValor;
-                        },
-                      ),
-                      const SizedBox(height: 5),
-                      _buildDropdownField('Género', _generos, _generoSelecionado, (String? novoValor) {
-                        _generoSelecionado = novoValor;
-                      }),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () => _enviarDados(context),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                        ),
-                        child: const Text(
-                          'ENVIAR',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                const SizedBox(height: 25),
+                const Center(
+                  child: Text(
+                    'CRIAR JOGADOR',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'FuturaStd',
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: SingleChildScrollView(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildTextField('Nome', '', _nomeController),
+                          const SizedBox(height: 5),
+                          _buildDateField('Data de Nascimento', _dataController, context),
+                          const SizedBox(height: 5),
+                          _buildDropdownField('Posição', _posicoes, _posicaoSelecionada,
+                              (String? novoValor) {
+                            _posicaoSelecionada = novoValor;
+                          }),
+                          const SizedBox(height: 5),
+                          _buildDropdownField('Nacionalidade', _paises, _paisSelecionado,
+                              (String? novoValor) {
+                            _paisSelecionado = novoValor;
+                          }),
+                          const SizedBox(height: 5),
+                          _buildDropdownField(
+                            'Clube',
+                            _clubes.map((c) => c['teamName'] as String).toList(),
+                            _clubeSelecionado,
+                            (String? novoValor) {
+                              _clubeSelecionado = novoValor;
+                            },
+                          ),
+                          const SizedBox(height: 5),
+                          _buildDropdownField('Género', _generos, _generoSelecionado,
+                              (String? novoValor) {
+                            _generoSelecionado = novoValor;
+                          }),
+                          const SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: () => _enviarDados(context),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                            ),
+                            child: const Text(
+                              'ENVIAR',
+                              style: TextStyle(
+                                  color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
+      floatingActionButton: CustomFloatingButton(
+        currentIndex: 2,
+        onTap: (index) => navigateToPage(context, index),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -228,7 +258,8 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
     );
   }
 
-  Widget _buildDropdownField(String label, List<String> items, String? selectedValue, ValueChanged<String?> onChanged) {
+  Widget _buildDropdownField(
+      String label, List<String> items, String? selectedValue, ValueChanged<String?> onChanged) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
