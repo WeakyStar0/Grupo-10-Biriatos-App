@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Importação do pacote intl para lidar com datas
-import 'navbutton.dart';
-import 'header.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const CriarJogador());
@@ -25,109 +25,126 @@ class CriarJogadorPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _dataController = TextEditingController();
-  final TextEditingController _contactoController = TextEditingController();
 
   final List<String> _posicoes = ['Guarda-redes', 'Defesa', 'Médio', 'Avançado'];
   final List<String> _paises = ['Portugal', 'Brasil', 'Espanha', 'França', 'Alemanha'];
   final List<String> _clubes = ['Clube A', 'Clube B', 'Clube C'];
+  final List<String> _generos = ['Male', 'Female', 'Other'];  // Valores para enviar ao backend
+  final Map<String, String> _generosDisplay = {
+    'Male': 'Masculino',
+    'Female': 'Feminino',
+    'Other': 'Outro'
+  }; // Mapa para exibir os valores em português
 
   String? _posicaoSelecionada;
   String? _paisSelecionado;
   String? _clubeSelecionado;
+  String? _generoSelecionado;
+
+  Future<void> _enviarDados(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      final nome = _nomeController.text;
+      final dataNascimento = _dataController.text;
+
+      // Verifica se as seleções não são nulas antes de usar
+      final posicao = _posicaoSelecionada ?? '';
+      final nacionalidade = _paisSelecionado ?? '';
+      final clube = _clubeSelecionado ?? '';
+      
+      // Aqui estamos garantindo que o valor enviado para o backend seja "Male", "Female" ou "Other"
+      final genero = _generoSelecionado ?? '';  // Envia o valor diretamente de _generoSelecionado
+
+      final Map<String, dynamic> jogador = {
+        "athleteId": DateTime.now().millisecondsSinceEpoch.toInt(), // Garante que seja um inteiro
+        "fullName": nome,
+        "dateOfBirth": DateFormat('dd/MM/yyyy').parse(dataNascimento).toIso8601String(),
+        "nationality": nacionalidade,
+        "position": posicao,
+        "gender": genero,  // Agora envia "Male", "Female" ou "Other" diretamente
+        "teamId": _clubes.indexOf(clube) + 1,
+        "agentId": 1
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://192.168.1.66:3000/athletes'), 
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(jogador),
+        );
+
+        if (response.statusCode == 201) {
+          print('Jogador criado: ${response.body}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Jogador criado com sucesso!')),
+          );
+        } else {
+          print('Erro na criação: ${response.body}');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erro ao criar jogador: ${response.body}')),
+          );
+        }
+      } catch (e) {
+        print('Erro de conexão: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro de conexão: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomHeader(
-        onBack: () {
-          Navigator.pop(context);
-        },
+      appBar: AppBar(
+        title: const Text('Criar Jogador'),
+        backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'CRIAR JOGADOR',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontFamily: 'FuturaStd',
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildTextField('Nome', '', _nomeController),
+                const SizedBox(height: 5),
+                _buildDateField('Data de Nascimento', _dataController, context),
+                const SizedBox(height: 5),
+                _buildDropdownField('Posição', _posicoes, _posicaoSelecionada, (String? novoValor) {
+                  _posicaoSelecionada = novoValor;
+                }),
+                const SizedBox(height: 5),
+                _buildDropdownField('Nacionalidade', _paises, _paisSelecionado, (String? novoValor) {
+                  _paisSelecionado = novoValor;
+                }),
+                const SizedBox(height: 5),
+                _buildDropdownField('Clube', _clubes, _clubeSelecionado, (String? novoValor) {
+                  _clubeSelecionado = novoValor;
+                }),
+                const SizedBox(height: 5),
+                _buildDropdownField('Género', _generos, _generoSelecionado, (String? novoValor) {
+                  _generoSelecionado = novoValor;
+                }),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: () => _enviarDados(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                  ),
+                  child: const Text(
+                    'ENVIAR',
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-              SizedBox(height: 15),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    _buildTextField('Nome', '', _nomeController),
-                    const SizedBox(height: 5),
-                    _buildDateField('Data de Nascimento', _dataController, context),
-                    const SizedBox(height: 5),
-                    _buildDropdownField('Posição', _posicoes, _posicaoSelecionada, (String? novoValor) {
-                      _posicaoSelecionada = novoValor;
-                    }),
-                    const SizedBox(height: 5),
-                    _buildDropdownField('Nacionalidade', _paises, _paisSelecionado, (String? novoValor) {
-                      _paisSelecionado = novoValor;
-                    }),
-                    const SizedBox(height: 5),
-                    _buildDropdownField('Clube', _clubes, _clubeSelecionado, (String? novoValor) {
-                      _clubeSelecionado = novoValor;
-                    }),
-                    const SizedBox(height: 5),
-                    _buildTextField('Contacto', '', _contactoController),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Captura e imprime os dados
-                          final nome = _nomeController.text;
-                          final dataNascimento = _dataController.text;
-                          final posicao = _posicaoSelecionada;
-                          final nacionalidade = _paisSelecionado;
-                          final clube = _clubeSelecionado;
-                          final contacto = _contactoController.text;
-
-                          print('--- Dados do Jogador ---');
-                          print('Nome: $nome');
-                          print('Data de Nascimento: $dataNascimento');
-                          print('Posição: $posicao');
-                          print('Nacionalidade: $nacionalidade');
-                          print('Clube: $clube');
-                          print('Contacto: $contacto');
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                      ),
-                      child: const Text(
-                        'ENVIAR',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 80), // Espaço adicional para evitar sobreposição
-            ],
+              ],
+            ),
           ),
         ),
       ),
-      floatingActionButton: CustomFloatingButton(
-        currentIndex: _currentIndex,
-        onTap: (index) => navigateToPage(context, index),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
-
-  int _currentIndex = 4;
 
   Widget _buildTextField(String label, String hint, TextEditingController controller) {
     return TextFormField(
@@ -153,7 +170,7 @@ class CriarJogadorPage extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        suffixIcon: Icon(Icons.calendar_today),
+        suffixIcon: const Icon(Icons.calendar_today),
       ),
       readOnly: true,
       onTap: () async {
@@ -186,7 +203,7 @@ class CriarJogadorPage extends StatelessWidget {
       items: items.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(_generosDisplay[value] ?? value), // Exibe o valor em português
         );
       }).toList(),
       onChanged: onChanged,

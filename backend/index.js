@@ -107,14 +107,19 @@ app.get('/users', async (req, res) => {
 
 // CRUD para atletas
 app.post('/athletes', async (req, res) => {
+  console.log('Recebendo dados para criar atleta:', req.body);
   try {
     const athlete = new Athlete(req.body);
     await athlete.save();
+    console.log('Atleta criado:', athlete);
     res.status(201).send(athlete);
   } catch (error) {
+    console.error('Erro ao criar atleta:', error);
     res.status(400).send(error);
   }
 });
+
+
 
 app.get('/athletes', async (req, res) => {
   const { teamId } = req.query;
