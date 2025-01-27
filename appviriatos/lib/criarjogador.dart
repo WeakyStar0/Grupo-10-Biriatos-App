@@ -19,55 +19,83 @@ class CriarJogador extends StatelessWidget {
   }
 }
 
-class CriarJogadorPage extends StatelessWidget {
+class CriarJogadorPage extends StatefulWidget {
   CriarJogadorPage({Key? key}) : super(key: key);
 
+  @override
+  _CriarJogadorPageState createState() => _CriarJogadorPageState();
+}
+
+class _CriarJogadorPageState extends State<CriarJogadorPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _dataController = TextEditingController();
 
   final List<String> _posicoes = ['Guarda-redes', 'Defesa', 'Médio', 'Avançado'];
   final List<String> _paises = ['Portugal', 'Brasil', 'Espanha', 'França', 'Alemanha'];
-  final List<String> _clubes = ['Clube A', 'Clube B', 'Clube C'];
-  final List<String> _generos = ['Male', 'Female', 'Other'];  // Valores para enviar ao backend
+  final List<String> _generos = ['Male', 'Female', 'Other'];
   final Map<String, String> _generosDisplay = {
     'Male': 'Masculino',
     'Female': 'Feminino',
     'Other': 'Outro'
-  }; // Mapa para exibir os valores em português
+  };
 
+  List<dynamic> _clubes = [];
   String? _posicaoSelecionada;
   String? _paisSelecionado;
   String? _clubeSelecionado;
   String? _generoSelecionado;
+  bool _isLoadingClubes = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchClubes();
+  }
+
+  Future<void> fetchClubes() async {
+    const url = 'http://192.168.1.66:3000/teams';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        setState(() {
+          _clubes = json.decode(response.body);
+          _isLoadingClubes = false;
+        });
+      } else {
+        throw Exception('Falha ao carregar clubes');
+      }
+    } catch (error) {
+      setState(() {
+        _isLoadingClubes = false;
+      });
+      print('Erro ao buscar clubes: $error');
+    }
+  }
 
   Future<void> _enviarDados(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       final nome = _nomeController.text;
       final dataNascimento = _dataController.text;
-
-      // Verifica se as seleções não são nulas antes de usar
       final posicao = _posicaoSelecionada ?? '';
       final nacionalidade = _paisSelecionado ?? '';
       final clube = _clubeSelecionado ?? '';
-      
-      // Aqui estamos garantindo que o valor enviado para o backend seja "Male", "Female" ou "Other"
-      final genero = _generoSelecionado ?? '';  // Envia o valor diretamente de _generoSelecionado
+      final genero = _generoSelecionado ?? '';
 
       final Map<String, dynamic> jogador = {
-        "athleteId": DateTime.now().millisecondsSinceEpoch.toInt(), // Garante que seja um inteiro
+        "athleteId": DateTime.now().millisecondsSinceEpoch.toInt(),
         "fullName": nome,
         "dateOfBirth": DateFormat('dd/MM/yyyy').parse(dataNascimento).toIso8601String(),
         "nationality": nacionalidade,
         "position": posicao,
-        "gender": genero,  // Agora envia "Male", "Female" ou "Other" diretamente
-        "teamId": _clubes.indexOf(clube) + 1,
+        "gender": genero,
+        "teamId": _clubes.firstWhere((c) => c['teamName'] == clube)['teamId'],
         "agentId": 1
       };
 
       try {
         final response = await http.post(
-          Uri.parse('http://192.168.1.66:3000/athletes'), 
+          Uri.parse('http://192.168.1.66:3000/athletes'),
           headers: {"Content-Type": "application/json"},
           body: json.encode(jogador),
         );
@@ -99,50 +127,57 @@ class CriarJogadorPage extends StatelessWidget {
         title: const Text('Criar Jogador'),
         backgroundColor: Colors.black,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTextField('Nome', '', _nomeController),
-                const SizedBox(height: 5),
-                _buildDateField('Data de Nascimento', _dataController, context),
-                const SizedBox(height: 5),
-                _buildDropdownField('Posição', _posicoes, _posicaoSelecionada, (String? novoValor) {
-                  _posicaoSelecionada = novoValor;
-                }),
-                const SizedBox(height: 5),
-                _buildDropdownField('Nacionalidade', _paises, _paisSelecionado, (String? novoValor) {
-                  _paisSelecionado = novoValor;
-                }),
-                const SizedBox(height: 5),
-                _buildDropdownField('Clube', _clubes, _clubeSelecionado, (String? novoValor) {
-                  _clubeSelecionado = novoValor;
-                }),
-                const SizedBox(height: 5),
-                _buildDropdownField('Género', _generos, _generoSelecionado, (String? novoValor) {
-                  _generoSelecionado = novoValor;
-                }),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () => _enviarDados(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
-                  ),
-                  child: const Text(
-                    'ENVIAR',
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      body: _isLoadingClubes
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildTextField('Nome', '', _nomeController),
+                      const SizedBox(height: 5),
+                      _buildDateField('Data de Nascimento', _dataController, context),
+                      const SizedBox(height: 5),
+                      _buildDropdownField('Posição', _posicoes, _posicaoSelecionada, (String? novoValor) {
+                        _posicaoSelecionada = novoValor;
+                      }),
+                      const SizedBox(height: 5),
+                      _buildDropdownField('Nacionalidade', _paises, _paisSelecionado, (String? novoValor) {
+                        _paisSelecionado = novoValor;
+                      }),
+                      const SizedBox(height: 5),
+                      _buildDropdownField(
+                        'Clube',
+                        _clubes.map((c) => c['teamName'] as String).toList(),
+                        _clubeSelecionado,
+                        (String? novoValor) {
+                          _clubeSelecionado = novoValor;
+                        },
+                      ),
+                      const SizedBox(height: 5),
+                      _buildDropdownField('Género', _generos, _generoSelecionado, (String? novoValor) {
+                        _generoSelecionado = novoValor;
+                      }),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () => _enviarDados(context),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                        ),
+                        child: const Text(
+                          'ENVIAR',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -203,7 +238,7 @@ class CriarJogadorPage extends StatelessWidget {
       items: items.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(_generosDisplay[value] ?? value), // Exibe o valor em português
+          child: Text(_generosDisplay[value] ?? value),
         );
       }).toList(),
       onChanged: onChanged,
