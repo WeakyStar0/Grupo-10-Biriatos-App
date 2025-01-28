@@ -34,7 +34,7 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
   final TextEditingController _dataController = TextEditingController();
 
   final List<String> _posicoes = ['Guarda-redes', 'Defesa', 'Médio', 'Avançado'];
-  final List<String> _paises = ['Portugal', 'Brasil', 'Espanha', 'França', 'Alemanha'];
+  List<String> _paises = [];
   final List<String> _generos = ['Male', 'Female', 'Other'];
   final Map<String, String> _generosDisplay = {
     'Male': 'Masculino',
@@ -48,11 +48,35 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
   String? _clubeSelecionado;
   String? _generoSelecionado;
   bool _isLoadingClubes = true;
+  bool _isLoadingPaises = true;
 
   @override
   void initState() {
     super.initState();
     fetchClubes();
+    fetchPaises();
+  }
+
+  Future<void> fetchPaises() async {
+    const url = 'https://restcountries.com/v3.1/all';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _paises = data.map<String>((country) => country['name']['common'] as String).toList();
+          _paises.sort(); // Ordena os países alfabeticamente
+          _isLoadingPaises = false;
+        });
+      } else {
+        throw Exception('Erro ao carregar os países');
+      }
+    } catch (error) {
+      setState(() {
+        _isLoadingPaises = false;
+      });
+      print('Erro ao buscar países: $error');
+    }
   }
 
   Future<void> fetchClubes() async {
@@ -131,7 +155,7 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
         },
       ),
       backgroundColor: Colors.white,
-      body: _isLoadingClubes
+      body: _isLoadingClubes || _isLoadingPaises
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
@@ -165,10 +189,13 @@ class _CriarJogadorPageState extends State<CriarJogadorPage> {
                             _posicaoSelecionada = novoValor;
                           }),
                           const SizedBox(height: 5),
-                          _buildDropdownField('Nacionalidade', _paises, _paisSelecionado,
+                          _buildDropdownField(
+                              'Nacionalidade',
+                              _paises,
+                              _paisSelecionado,
                               (String? novoValor) {
-                            _paisSelecionado = novoValor;
-                          }),
+                                _paisSelecionado = novoValor;
+                              }),
                           const SizedBox(height: 5),
                           _buildDropdownField(
                             'Clube',
