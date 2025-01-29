@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'navbutton.dart';
 import 'header.dart';
-import 'menu.dart'; // Importe a página menu.dart
+import 'menu.dart';
 
 class RelatorioPage extends StatefulWidget {
   const RelatorioPage({super.key, required this.athleteId});
 
-  final int athleteId; // Agora o athleteId é passado como parâmetro
+  final int athleteId;
 
   @override
   _RelatorioPageState createState() => _RelatorioPageState();
@@ -26,9 +26,8 @@ class _RelatorioPageState extends State<RelatorioPage> {
   int? finalRating;
   final TextEditingController freeTextController = TextEditingController();
 
-  final int userId = 1; // Substituir pelo ID real do usuário
+  final int userId = 1;
 
-  // Mapas para converter exibição em português para valores em inglês
   final Map<String, String> heightMap = {
     'Alto': 'High',
     'Médio': 'Medium',
@@ -44,7 +43,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
   Future<void> salvarRelatorio({bool enviar = false}) async {
     final url = 'http://192.168.1.66:3000/reports';
     final Map<String, dynamic> reportData = {
-      "athleteId": widget.athleteId, // Usando o athleteId passado como parâmetro
+      "athleteId": widget.athleteId,
       "userId": userId,
       "technical": technical,
       "speed": speed,
@@ -68,12 +67,11 @@ class _RelatorioPageState extends State<RelatorioPage> {
           const SnackBar(content: Text("Relatório salvo com sucesso!"))
         );
 
-        // Se o botão "ENVIAR" foi pressionado, navegue para a página menu.dart
         if (enviar) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => MenuPage(), // Navega para a página menu.dart
+              builder: (context) => MenuPage(),
             ),
           );
         }
@@ -136,17 +134,18 @@ class _RelatorioPageState extends State<RelatorioPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: () => salvarRelatorio(enviar: false), // Botão "GUARDAR"
+                    onPressed: () => salvarRelatorio(enviar: false),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                     child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
                   ),
                   ElevatedButton(
-                    onPressed: () => salvarRelatorio(enviar: true), // Botão "ENVIAR"
+                    onPressed: () => salvarRelatorio(enviar: true),
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                     child: const Text('ENVIAR', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
+              const SizedBox(height: 80), // Espaço extra para evitar sobreposição com o botão de navegação
             ],
           ),
         ),
