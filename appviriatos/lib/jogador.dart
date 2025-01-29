@@ -13,6 +13,7 @@ class JogadorPage extends StatelessWidget {
   final String clubeNome;
   final String dataNascimento;
   final String jogadorNacionalidade;
+  final int athleteId; // Adicionando athleteId como parâmetro
 
   JogadorPage({
     required this.jogadorNome,
@@ -20,6 +21,7 @@ class JogadorPage extends StatelessWidget {
     required this.clubeNome,
     required this.dataNascimento,
     required this.jogadorNacionalidade,
+    required this.athleteId, // Adicionando athleteId como parâmetro
   });
 
   Future<Map<String, String>> fetchAgentInfo(String playerName) async {
@@ -287,7 +289,7 @@ class JogadorPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RelatorioPage(),
+                          builder: (context) => RelatorioPage(athleteId: athleteId), // Passando o athleteId para RelatorioPage
                         ),
                       );
                     },

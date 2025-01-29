@@ -5,8 +5,9 @@ import 'navbutton.dart';
 import 'header.dart';
 
 class RelatorioPage extends StatefulWidget {
-  const RelatorioPage({super.key});
-  final int athleteId = 1; // Substituir pelo ID real do atleta
+  const RelatorioPage({super.key, required this.athleteId});
+
+  final int athleteId; // Agora o athleteId é passado como parâmetro
 
   @override
   _RelatorioPageState createState() => _RelatorioPageState();
@@ -42,7 +43,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
   Future<void> salvarRelatorio() async {
     final url = 'http://192.168.1.66:3000/reports';
     final Map<String, dynamic> reportData = {
-      "athleteId": widget.athleteId,
+      "athleteId": widget.athleteId, // Usando o athleteId passado como parâmetro
       "userId": userId,
       "technical": technical,
       "speed": speed,
