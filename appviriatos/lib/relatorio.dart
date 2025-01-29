@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'navbutton.dart';
 import 'header.dart';
+import 'menu.dart'; // Importe a página menu.dart
 
 class RelatorioPage extends StatefulWidget {
   const RelatorioPage({super.key, required this.athleteId});
@@ -40,7 +41,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
     'Endomorfo': 'Endomorph'
   };
 
-  Future<void> salvarRelatorio() async {
+  Future<void> salvarRelatorio({bool enviar = false}) async {
     final url = 'http://192.168.1.66:3000/reports';
     final Map<String, dynamic> reportData = {
       "athleteId": widget.athleteId, // Usando o athleteId passado como parâmetro
@@ -66,6 +67,16 @@ class _RelatorioPageState extends State<RelatorioPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Relatório salvo com sucesso!"))
         );
+
+        // Se o botão "ENVIAR" foi pressionado, navegue para a página menu.dart
+        if (enviar) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MenuPage(), // Navega para a página menu.dart
+            ),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erro ao salvar: ${response.body}"))
@@ -125,12 +136,12 @@ class _RelatorioPageState extends State<RelatorioPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: salvarRelatorio,
+                    onPressed: () => salvarRelatorio(enviar: false), // Botão "GUARDAR"
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                     child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
                   ),
                   ElevatedButton(
-                    onPressed: salvarRelatorio,
+                    onPressed: () => salvarRelatorio(enviar: true), // Botão "ENVIAR"
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                     child: const Text('ENVIAR', style: TextStyle(color: Colors.white)),
                   ),
