@@ -26,6 +26,19 @@ class _RelatorioPageState extends State<RelatorioPage> {
 
   final int userId = 1; // Substituir pelo ID real do usuário
 
+  // Mapas para converter exibição em português para valores em inglês
+  final Map<String, String> heightMap = {
+    'Alto': 'High',
+    'Médio': 'Medium',
+    'Baixo': 'Low'
+  };
+
+  final Map<String, String> morphologyMap = {
+    'Ectomorfo': 'Ectomorph',
+    'Mesomorfo': 'Mesomorph',
+    'Endomorfo': 'Endomorph'
+  };
+
   Future<void> salvarRelatorio() async {
     final url = 'http://192.168.1.66:3000/reports';
     final Map<String, dynamic> reportData = {
@@ -42,31 +55,22 @@ class _RelatorioPageState extends State<RelatorioPage> {
     };
 
     try {
-      print('📤 Enviando relatório para $url');
-      print('📄 Dados do relatório: $reportData');
-
       final response = await http.post(
         Uri.parse(url),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(reportData),
       );
 
-      print('✅ Resposta do servidor: ${response.statusCode}');
-      print('🔹 Corpo da resposta: ${response.body}');
-
       if (response.statusCode == 201) {
-        print('🎉 Relatório salvo com sucesso!');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Relatório salvo com sucesso!"))
         );
       } else {
-        print('❌ Erro ao salvar relatório: ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erro ao salvar: ${response.body}"))
         );
       }
     } catch (e) {
-      print('🚨 Erro na requisição: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erro na requisição: $e"))
       );
@@ -99,48 +103,13 @@ class _RelatorioPageState extends State<RelatorioPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              buildOptionSelector('Técnica', 1, 4, (value) {
-                setState(() {
-                  technical = value;
-                  print("🎯 Técnica selecionada: $technical");
-                });
-              }, selectedValue: technical),
-              buildOptionSelector('Velocidade', 1, 4, (value) {
-                setState(() {
-                  speed = value;
-                  print("⚡ Velocidade selecionada: $speed");
-                });
-              }, selectedValue: speed),
-              buildOptionSelector('Atitude Competitiva', 1, 4, (value) {
-                setState(() {
-                  competitiveAttitude = value;
-                  print("🔥 Atitude Competitiva selecionada: $competitiveAttitude");
-                });
-              }, selectedValue: competitiveAttitude),
-              buildOptionSelector('Inteligência', 1, 4, (value) {
-                setState(() {
-                  intelligence = value;
-                  print("🧠 Inteligência selecionada: $intelligence");
-                });
-              }, selectedValue: intelligence),
-              buildTextSelector('Altura', ['High', 'Medium', 'Low'], (value) {
-                setState(() {
-                  height = value;
-                  print("📏 Altura selecionada: $height");
-                });
-              }, selectedValue: height),
-              buildTextSelector('Morfologia', ['Ectomorph', 'Mesomorph', 'Endomorph'], (value) {
-                setState(() {
-                  morphology = value;
-                  print("🦴 Morfologia selecionada: $morphology");
-                });
-              }, selectedValue: morphology),
-              buildOptionSelector('Classificação Final', 1, 4, (value) {
-                setState(() {
-                  finalRating = value;
-                  print("⭐ Classificação Final selecionada: $finalRating");
-                });
-              }, selectedValue: finalRating),
+              buildOptionSelector('Técnica', 1, 4, (value) => setState(() => technical = value), selectedValue: technical),
+              buildOptionSelector('Velocidade', 1, 4, (value) => setState(() => speed = value), selectedValue: speed),
+              buildOptionSelector('Atitude Competitiva', 1, 4, (value) => setState(() => competitiveAttitude = value), selectedValue: competitiveAttitude),
+              buildOptionSelector('Inteligência', 1, 4, (value) => setState(() => intelligence = value), selectedValue: intelligence),
+              buildTextSelector('Altura', heightMap, (value) => setState(() => height = value), selectedValue: height),
+              buildTextSelector('Morfologia', morphologyMap, (value) => setState(() => morphology = value), selectedValue: morphology),
+              buildOptionSelector('Classificação Final', 1, 4, (value) => setState(() => finalRating = value), selectedValue: finalRating),
               const SizedBox(height: 30),
               TextField(
                 controller: freeTextController,
@@ -149,9 +118,6 @@ class _RelatorioPageState extends State<RelatorioPage> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
-                onChanged: (text) {
-                  print("📝 Observações: $text");
-                },
               ),
               const SizedBox(height: 30),
               Row(
@@ -181,17 +147,13 @@ class _RelatorioPageState extends State<RelatorioPage> {
     );
   }
 
-  Widget buildOptionSelector(String label, int min, int max, Function(int) onSelect,
-      {int? selectedValue}) {
+  Widget buildOptionSelector(String label, int min, int max, Function(int) onSelect, {int? selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 16.0, bottom: 5.0),
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          child: Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -222,35 +184,31 @@ class _RelatorioPageState extends State<RelatorioPage> {
     );
   }
 
-  Widget buildTextSelector(String label, List<String> options, Function(String) onSelect,
-      {String? selectedValue}) {
+  Widget buildTextSelector(String label, Map<String, String> options, Function(String) onSelect, {String? selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 16.0, bottom: 5.0),
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
+          child: Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: options.map((option) {
+          children: options.keys.map((key) {
             return GestureDetector(
-              onTap: () => onSelect(option),
+              onTap: () => onSelect(options[key]!),
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
-                  color: selectedValue == option ? Colors.black : Colors.white,
+                  color: selectedValue == options[key] ? Colors.black : Colors.white,
                   border: Border.all(color: Colors.black),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  option,
+                  key,
                   style: TextStyle(
-                    color: selectedValue == option ? Colors.white : Colors.black,
+                    color: selectedValue == options[key] ? Colors.white : Colors.black,
                     fontSize: 16,
                   ),
                 ),
