@@ -1,31 +1,84 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
-import 'header.dart'; // Importa o CustomHeader
+import 'package:http/http.dart' as http;
+import 'navbutton.dart';
+import 'header.dart';
 
 class RelatorioPage extends StatefulWidget {
   const RelatorioPage({super.key});
+  final int athleteId = 1; // Substituir pelo ID real do atleta
 
   @override
   _RelatorioPageState createState() => _RelatorioPageState();
 }
 
 class _RelatorioPageState extends State<RelatorioPage> {
-  int _currentIndex = 4; // Índice atual da página
-  int? tecnica; // 1 a 4
-  int? velocidade; // 1 a 4
-  int? atitudeCompetitiva; // 1 a 4
-  int? inteligencia; // 1 a 4
-  String? altura; // Alto, Médio, Baixo
-  String? morfologia; // Ectomorfo, Mesomorfo, Endomorfo
-  int? ratingFinal; // 1 a 4
-  final TextEditingController observacoesController = TextEditingController();
+  int _currentIndex = 4;
+
+  int? technical;
+  int? speed;
+  int? competitiveAttitude;
+  int? intelligence;
+  String? height;
+  String? morphology;
+  int? finalRating;
+  final TextEditingController freeTextController = TextEditingController();
+
+  final int userId = 1; // Substituir pelo ID real do usuário
+
+  Future<void> salvarRelatorio() async {
+    final url = 'http://192.168.1.66:3000/reports';
+    final Map<String, dynamic> reportData = {
+      "athleteId": widget.athleteId,
+      "userId": userId,
+      "technical": technical,
+      "speed": speed,
+      "competitiveAttitude": competitiveAttitude,
+      "intelligence": intelligence,
+      "height": height,
+      "morphology": morphology,
+      "finalRating": finalRating,
+      "freeText": freeTextController.text,
+    };
+
+    try {
+      print('📤 Enviando relatório para $url');
+      print('📄 Dados do relatório: $reportData');
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(reportData),
+      );
+
+      print('✅ Resposta do servidor: ${response.statusCode}');
+      print('🔹 Corpo da resposta: ${response.body}');
+
+      if (response.statusCode == 201) {
+        print('🎉 Relatório salvo com sucesso!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Relatório salvo com sucesso!"))
+        );
+      } else {
+        print('❌ Erro ao salvar relatório: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erro ao salvar: ${response.body}"))
+        );
+      }
+    } catch (e) {
+      print('🚨 Erro na requisição: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro na requisição: $e"))
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
-          Navigator.pop(context); // Voltar à página anterior
+          Navigator.pop(context);
         },
       ),
       body: SingleChildScrollView(
@@ -35,14 +88,11 @@ class _RelatorioPageState extends State<RelatorioPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              // Título
               const Center(
                 child: Text(
                   'RELATÓRIO',
-                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
-                    color: Color.fromARGB(255, 0, 0, 0),
+                    fontFamily: 'FuturaStd',
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                   ),
@@ -51,95 +101,74 @@ class _RelatorioPageState extends State<RelatorioPage> {
               const SizedBox(height: 20),
               buildOptionSelector('Técnica', 1, 4, (value) {
                 setState(() {
-                  tecnica = value;
+                  technical = value;
+                  print("🎯 Técnica selecionada: $technical");
                 });
-              }, selectedValue: tecnica),
-              const SizedBox(height: 20),
+              }, selectedValue: technical),
               buildOptionSelector('Velocidade', 1, 4, (value) {
                 setState(() {
-                  velocidade = value;
+                  speed = value;
+                  print("⚡ Velocidade selecionada: $speed");
                 });
-              }, selectedValue: velocidade),
-              const SizedBox(height: 20),
-              buildOptionSelector('Atitude competitiva', 1, 4, (value) {
+              }, selectedValue: speed),
+              buildOptionSelector('Atitude Competitiva', 1, 4, (value) {
                 setState(() {
-                  atitudeCompetitiva = value;
+                  competitiveAttitude = value;
+                  print("🔥 Atitude Competitiva selecionada: $competitiveAttitude");
                 });
-              }, selectedValue: atitudeCompetitiva),
-              const SizedBox(height: 20),
+              }, selectedValue: competitiveAttitude),
               buildOptionSelector('Inteligência', 1, 4, (value) {
                 setState(() {
-                  inteligencia = value;
+                  intelligence = value;
+                  print("🧠 Inteligência selecionada: $intelligence");
                 });
-              }, selectedValue: inteligencia),
-              const SizedBox(height: 20),
-              buildTextSelector('Altura', ['Alto', 'Médio', 'Baixo'], (value) {
+              }, selectedValue: intelligence),
+              buildTextSelector('Altura', ['High', 'Medium', 'Low'], (value) {
                 setState(() {
-                  altura = value;
+                  height = value;
+                  print("📏 Altura selecionada: $height");
                 });
-              }, selectedValue: altura),
-              const SizedBox(height: 20),
-              buildTextSelector('Morfologia', ['Ectomorfo', 'Mesomorfo', 'Endomorfo'], (value) {
+              }, selectedValue: height),
+              buildTextSelector('Morfologia', ['Ectomorph', 'Mesomorph', 'Endomorph'], (value) {
                 setState(() {
-                  morfologia = value;
+                  morphology = value;
+                  print("🦴 Morfologia selecionada: $morphology");
                 });
-              }, selectedValue: morfologia),
-              const SizedBox(height: 20),
-              buildOptionSelector('Rating final', 1, 4, (value) {
+              }, selectedValue: morphology),
+              buildOptionSelector('Classificação Final', 1, 4, (value) {
                 setState(() {
-                  ratingFinal = value;
+                  finalRating = value;
+                  print("⭐ Classificação Final selecionada: $finalRating");
                 });
-              }, selectedValue: ratingFinal),
+              }, selectedValue: finalRating),
               const SizedBox(height: 30),
               TextField(
-                controller: observacoesController,
+                controller: freeTextController,
                 decoration: const InputDecoration(
                   hintText: 'Observações',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
+                onChanged: (text) {
+                  print("📝 Observações: $text");
+                },
               ),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      // Lógica para salvar
-                      print('Dados guardados:');
-                      printData();
-                    },
+                    onPressed: salvarRelatorio,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text('GUARDAR',
-                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'FuturaStd',
-                      fontSize: 13,
-                    ),
-                    
-                    ),
+                    child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      // Lógica para enviar
-                      print('Dados enviados:');
-                      printData();
-                    },
+                    onPressed: salvarRelatorio,
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text('ENVIAR',
-                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'FuturaStd',
-                      fontSize: 13,
-                    ),
-                    ),
-                    
+                    child: const Text('ENVIAR', style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
-              const SizedBox(height: 80), // Espaço extra no final
             ],
           ),
         ),
@@ -158,14 +187,10 @@ class _RelatorioPageState extends State<RelatorioPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 5.0), // Espaço adicional abaixo do texto
+          padding: const EdgeInsets.only(left: 16.0, bottom: 5.0),
           child: Text(
             label,
-            style: const TextStyle(
-              fontFamily: 'FuturaStd Book',
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         Row(
@@ -175,8 +200,8 @@ class _RelatorioPageState extends State<RelatorioPage> {
             return GestureDetector(
               onTap: () => onSelect(value),
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8), // Maior espaçamento horizontal
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Botão mais largo
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 decoration: BoxDecoration(
                   color: selectedValue == value ? Colors.black : Colors.white,
                   border: Border.all(color: Colors.black),
@@ -197,21 +222,16 @@ class _RelatorioPageState extends State<RelatorioPage> {
     );
   }
 
-  Widget buildTextSelector(
-      String label, List<String> options, Function(String) onSelect,
+  Widget buildTextSelector(String label, List<String> options, Function(String) onSelect,
       {String? selectedValue}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 16.0, bottom: 5.0), // Espaço adicional abaixo do texto
+          padding: const EdgeInsets.only(left: 16.0, bottom: 5.0),
           child: Text(
             label,
-            style: const TextStyle(
-              fontFamily: 'FuturaStd Book',
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
         Row(
@@ -220,8 +240,8 @@ class _RelatorioPageState extends State<RelatorioPage> {
             return GestureDetector(
               onTap: () => onSelect(option),
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 8), // Maior espaçamento horizontal
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10), // Botão mais largo
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: selectedValue == option ? Colors.black : Colors.white,
                   border: Border.all(color: Colors.black),
@@ -240,16 +260,5 @@ class _RelatorioPageState extends State<RelatorioPage> {
         ),
       ],
     );
-  }
-
-  void printData() {
-    print('Técnica: $tecnica');
-    print('Velocidade: $velocidade');
-    print('Atitude Competitiva: $atitudeCompetitiva');
-    print('Inteligência: $inteligencia');
-    print('Altura: $altura');
-    print('Morfologia: $morfologia');
-    print('Rating Final: $ratingFinal');
-    print('Observações: ${observacoesController.text}');
   }
 }

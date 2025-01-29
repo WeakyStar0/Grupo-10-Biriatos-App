@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reportSchema = new mongoose.Schema({
-  reportId: { type: Number, required: true, unique: true },
+  reportId: { type: Number, unique: true },
   athleteId: { type: Number, required: true },
   userId: { type: Number, required: true },
   technical: { type: Number, min: 1, max: 4, required: true },
@@ -14,4 +14,13 @@ const reportSchema = new mongoose.Schema({
   freeText: { type: String },
 });
 
-module.exports = mongoose.model('Report', reportSchema);
+// Antes de salvar, definir um reportId automaticamente
+reportSchema.pre("save", async function (next) {
+  if (!this.reportId) {
+    const lastReport = await Report.findOne().sort("-reportId");
+    this.reportId = lastReport ? lastReport.reportId + 1 : 1;
+  }
+  next();
+});
+
+const Report = mongoose.model("Report", reportSchema);

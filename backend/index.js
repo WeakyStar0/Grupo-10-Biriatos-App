@@ -51,7 +51,7 @@ const agentSchema = new mongoose.Schema({
 });
 
 const reportSchema = new mongoose.Schema({
-  reportId: { type: Number, required: true, unique: true },
+  reportId: { type: Number, unique: true },
   athleteId: { type: Number, required: true },
   userId: { type: Number, required: true },
   technical: { type: Number, min: 1, max: 4, required: true },
@@ -63,6 +63,16 @@ const reportSchema = new mongoose.Schema({
   finalRating: { type: Number, min: 1, max: 4, required: true },
   freeText: { type: String },
 });
+
+// Antes de salvar, definir um reportId automaticamente
+reportSchema.pre("save", async function (next) {
+  if (!this.reportId) {
+    const lastReport = await Report.findOne().sort("-reportId");
+    this.reportId = lastReport ? lastReport.reportId + 1 : 1;
+  }
+  next();
+});
+
 
 const taskSchema = new mongoose.Schema({
   taskId: { type: Number, required: true, unique: true },
@@ -209,15 +219,17 @@ app.get('/agentInfo', async (req, res) => {
 
 
 // CRUD para relatórios
-app.post('/reports', async (req, res) => {
+app.post("/reports", async (req, res) => {
   try {
-    const report = new Report(req.body);
-    await report.save();
-    res.status(201).send(report);
+    const newReport = new Report(req.body);
+    await newReport.save();
+    res.status(201).json({ message: "Relatório salvo com sucesso!" });
   } catch (error) {
-    res.status(400).send(error);
+    console.error("Erro ao salvar relatório:", error); // Exibir erro real
+    res.status(500).json({ error: "Erro ao salvar o relatório", details: error.message });
   }
 });
+
 
 app.get('/reports', async (req, res) => {
   try {
