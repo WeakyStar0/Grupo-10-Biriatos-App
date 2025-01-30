@@ -253,13 +253,12 @@ app.post('/tasks', async (req, res) => {
 
 app.get('/tasks', async (req, res) => {
   try {
-    const tasks = await Task.find();
-    res.status(200).send(tasks);
+    const tasks = await Task.find(); // Usando o modelo Task do mongoose
+    res.status(200).json(tasks);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ error: 'Erro ao buscar tarefas.' });
   }
 });
-
 // Iniciar o servidor
 const PORT = 3000;
 app.listen(PORT, () => {
