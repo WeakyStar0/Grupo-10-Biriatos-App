@@ -58,8 +58,8 @@ const reportSchema = new mongoose.Schema({
   speed: { type: Number, min: 1, max: 4, required: true },
   competitiveAttitude: { type: Number, min: 1, max: 4, required: true },
   intelligence: { type: Number, min: 1, max: 4, required: true },
-  height: { type: String, enum: ['High', 'Medium', 'Low'], required: true },
-  morphology: { type: String, enum: ['Ectomorph', 'Mesomorph', 'Endomorph'], required: true },
+  height: { type: String, enum: ["High", "Medium", "Low"], required: true },
+  morphology: { type: String, enum: ["Ectomorph", "Mesomorph", "Endomorph"], required: true },
   finalRating: { type: Number, min: 1, max: 4, required: true },
   freeText: { type: String },
 });
@@ -141,6 +141,19 @@ app.get('/athletes', async (req, res) => {
   }
 });
 
+app.get('/athletes/:athleteId', async (req, res) => {
+  const athleteId = parseInt(req.params.athleteId);
+  try {
+    const athlete = await Athlete.findOne({ athleteId });
+    if (!athlete) {
+      return res.status(404).json({ error: 'Jogador não encontrado.' });
+    }
+    res.status(200).json(athlete);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar detalhes do jogador.' });
+  }
+});
+
 // CRUD para times
 app.post('/teams', async (req, res) => {
   try {
@@ -169,6 +182,19 @@ app.get('/teams/:teamId/athletes', async (req, res) => {
     res.status(200).json(athletes);
   } catch (error) {
     res.status(500).json({ error: 'Erro ao buscar atletas do time' });
+  }
+});
+
+app.get('/teams/:teamId', async (req, res) => {
+  const teamId = parseInt(req.params.teamId);
+  try {
+    const team = await Team.findOne({ teamId });
+    if (!team) {
+      return res.status(404).json({ error: 'Clube não encontrado.' });
+    }
+    res.status(200).json(team);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar detalhes do clube.' });
   }
 });
 

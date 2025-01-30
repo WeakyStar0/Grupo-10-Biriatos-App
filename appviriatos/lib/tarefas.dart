@@ -38,14 +38,25 @@ class _TarefasPageState extends State<TarefasPage> {
     fetchTarefas();
   }
 
+  // Função para buscar as tarefas
   Future<void> fetchTarefas() async {
-    final url = 'http://192.168.1.66:3000/tasks'; // Endpoint para buscar as tarefas
+    const url = 'http://192.168.1.66:3000/tasks'; // Endpoint para buscar as tarefas
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
+        final List<dynamic> tasks = json.decode(response.body);
+
+        // Para cada tarefa, buscar detalhes do jogador e do clube
+        for (var task in tasks) {
+          final athlete = await fetchAthlete(task['athleteId']);
+          final team = await fetchTeam(task['teamId']);
+          task['athleteName'] = athlete['fullName']; // Adiciona o nome do jogador
+          task['teamName'] = team['teamName']; // Adiciona o nome do clube
+        }
+
         setState(() {
-          tarefas = json.decode(response.body);
-          filteredTarefas = tarefas;
+          tarefas = tasks;
+          filteredTarefas = tasks;
           isLoading = false;
         });
       } else {
@@ -59,6 +70,39 @@ class _TarefasPageState extends State<TarefasPage> {
     }
   }
 
+  // Função para buscar detalhes do jogador
+  Future<Map<String, dynamic>> fetchAthlete(int athleteId) async {
+    final url = 'http://192.168.1.66:3000/athletes/$athleteId';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Falha ao buscar detalhes do jogador');
+      }
+    } catch (error) {
+      print('Erro ao buscar jogador: $error');
+      return {'fullName': 'Nome não encontrado'};
+    }
+  }
+
+  // Função para buscar detalhes do clube
+  Future<Map<String, dynamic>> fetchTeam(int teamId) async {
+    final url = 'http://192.168.1.66:3000/teams/$teamId';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Falha ao buscar detalhes do clube');
+      }
+    } catch (error) {
+      print('Erro ao buscar clube: $error');
+      return {'teamName': 'Clube não encontrado'};
+    }
+  }
+
+  // Função para filtrar as tarefas
   void _searchTarefas(String query) {
     setState(() {
       filteredTarefas = tarefas.where((tarefa) {
@@ -79,7 +123,7 @@ class _TarefasPageState extends State<TarefasPage> {
       ),
       backgroundColor: Colors.white,
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator()) // Indicador de carregamento
           : Column(
               children: [
                 const SizedBox(height: 25),
@@ -122,6 +166,9 @@ class _TarefasPageState extends State<TarefasPage> {
                     itemCount: filteredTarefas.length,
                     itemBuilder: (context, index) {
                       final tarefa = filteredTarefas[index];
+                      final jogador = tarefa['athleteName'] ?? 'Nome não encontrado';
+                      final clube = tarefa['teamName'] ?? 'Clube não encontrado';
+
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
@@ -139,14 +186,14 @@ class _TarefasPageState extends State<TarefasPage> {
                               ),
                               const SizedBox(height: 8.0),
                               Text(
-                                'Jogador: ${tarefa['athleteId']}', // Aqui você pode buscar o nome do jogador pelo athleteId
+                                'Jogador: $jogador',
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                   color: Colors.grey,
                                 ),
                               ),
                               Text(
-                                'Clube: ${tarefa['teamId']}', // Aqui você pode buscar o nome do clube pelo teamId
+                                'Clube: $clube',
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                   color: Colors.grey,

@@ -61,6 +61,14 @@ class _RelatorioPageState extends State<RelatorioPage> {
   }
 
   Future<void> salvarRelatorio({bool enviar = false}) async {
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Preencha todos os campos antes de enviar."))
+      );
+      return;
+    }
+
     final Map<String, dynamic> reportData = {
       "athleteId": widget.athleteId,
       "userId": userId,
