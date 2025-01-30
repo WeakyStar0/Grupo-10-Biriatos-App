@@ -289,7 +289,7 @@ class JogadorPage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => RelatorioPage(athleteId: athleteId), // Passando o athleteId para RelatorioPage
+                          builder: (context) => RelatorioPage(athleteId: athleteId, fullName: jogadorNome,), // Passando o athleteId para RelatorioPage
                         ),
                       );
                     },

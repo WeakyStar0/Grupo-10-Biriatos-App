@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Importe o pacote
+import 'package:shared_preferences/shared_preferences.dart';
 import 'navbutton.dart';
 import 'header.dart';
-import 'relatorio.dart'; // Importe a página de relatório
+import 'relatorio.dart';
 import 'dart:convert';
-
 
 class RascunhosPage extends StatefulWidget {
   @override
@@ -26,7 +25,6 @@ class _RascunhosPageState extends State<RascunhosPage> {
     final rascunhosSalvos = prefs.getStringList('rascunhos') ?? [];
     setState(() {
       rascunhos = rascunhosSalvos.map((r) => jsonDecode(r) as Map<String, dynamic>).toList();
-
     });
   }
 
@@ -74,7 +72,7 @@ class _RascunhosPageState extends State<RascunhosPage> {
                         color: Colors.black,
                       ),
                       title: Text(
-                        'Rascunho do Jogador ${rascunho['athleteId']}',
+                        rascunho['fullName'], // Exibe o nome do jogador
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
@@ -90,6 +88,7 @@ class _RascunhosPageState extends State<RascunhosPage> {
                           MaterialPageRoute(
                             builder: (context) => RelatorioPage(
                               athleteId: rascunho['athleteId'],
+                              fullName: rascunho['fullName'], // Passa o nome do jogador
                               rascunho: rascunho,
                             ),
                           ),

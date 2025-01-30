@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Importe o pacote
+import 'package:shared_preferences/shared_preferences.dart';
 import 'navbutton.dart';
 import 'header.dart';
 import 'menu.dart';
-import 'rascunhos.dart'; // Importe a página de rascunhos
+import 'rascunhos.dart';
 
 class RelatorioPage extends StatefulWidget {
-  const RelatorioPage({super.key, required this.athleteId, this.rascunho});
+  const RelatorioPage({super.key, required this.athleteId, required this.fullName, this.rascunho});
 
   final int athleteId;
+  final String fullName; // Nome completo do jogador
   final Map<String, dynamic>? rascunho; // Dados do rascunho, se estiver editando
 
   @override
@@ -71,6 +72,8 @@ class _RelatorioPageState extends State<RelatorioPage> {
       "morphology": morphology,
       "finalRating": finalRating,
       "freeText": freeTextController.text,
+      "fullName": widget.fullName, // Adiciona o nome do jogador
+      "dataCriacao": DateTime.now().toString(), // Adiciona data de criação
     };
 
     if (enviar) {
@@ -121,8 +124,21 @@ class _RelatorioPageState extends State<RelatorioPage> {
   Future<void> _salvarRascunho(Map<String, dynamic> reportData) async {
     final prefs = await SharedPreferences.getInstance();
     final rascunhos = prefs.getStringList('rascunhos') ?? [];
-    reportData['dataCriacao'] = DateTime.now().toString(); // Adiciona data de criação
-    rascunhos.add(jsonEncode(reportData));
+
+    // Verifica se já existe um rascunho para o mesmo athleteId
+    final index = rascunhos.indexWhere((r) {
+      final rascunho = jsonDecode(r) as Map<String, dynamic>;
+      return rascunho['athleteId'] == widget.athleteId;
+    });
+
+    if (index != -1) {
+      // Atualiza o rascunho existente
+      rascunhos[index] = jsonEncode(reportData);
+    } else {
+      // Adiciona um novo rascunho
+      rascunhos.add(jsonEncode(reportData));
+    }
+
     await prefs.setStringList('rascunhos', rascunhos);
   }
 
