@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Importe o pacote
 import 'navbutton.dart';
 import 'header.dart';
 import 'menu.dart';
+import 'rascunhos.dart'; // Importe a página de rascunhos
 
 class RelatorioPage extends StatefulWidget {
-  const RelatorioPage({super.key, required this.athleteId});
+  const RelatorioPage({super.key, required this.athleteId, this.rascunho});
 
   final int athleteId;
+  final Map<String, dynamic>? rascunho; // Dados do rascunho, se estiver editando
 
   @override
   _RelatorioPageState createState() => _RelatorioPageState();
@@ -40,8 +43,23 @@ class _RelatorioPageState extends State<RelatorioPage> {
     'Endomorfo': 'Endomorph'
   };
 
+  @override
+  void initState() {
+    super.initState();
+    // Se estiver editando um rascunho, carregue os dados
+    if (widget.rascunho != null) {
+      technical = widget.rascunho!['technical'];
+      speed = widget.rascunho!['speed'];
+      competitiveAttitude = widget.rascunho!['competitiveAttitude'];
+      intelligence = widget.rascunho!['intelligence'];
+      height = widget.rascunho!['height'];
+      morphology = widget.rascunho!['morphology'];
+      finalRating = widget.rascunho!['finalRating'];
+      freeTextController.text = widget.rascunho!['freeText'];
+    }
+  }
+
   Future<void> salvarRelatorio({bool enviar = false}) async {
-    final url = 'http://192.168.1.66:3000/reports';
     final Map<String, dynamic> reportData = {
       "athleteId": widget.athleteId,
       "userId": userId,
@@ -55,36 +73,57 @@ class _RelatorioPageState extends State<RelatorioPage> {
       "freeText": freeTextController.text,
     };
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(reportData),
-      );
-
-      if (response.statusCode == 201) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Relatório salvo com sucesso!"))
+    if (enviar) {
+      // Enviar relatório para a API
+      final url = 'http://192.168.1.66:3000/reports';
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(reportData),
         );
 
-        if (enviar) {
+        if (response.statusCode == 201) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Relatório salvo com sucesso!"))
+          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => MenuPage(),
             ),
           );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Erro ao salvar: ${response.body}"))
+          );
         }
-      } else {
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erro ao salvar: ${response.body}"))
+          SnackBar(content: Text("Erro na requisição: $e"))
         );
       }
-    } catch (e) {
+    } else {
+      // Salvar como rascunho localmente
+      await _salvarRascunho(reportData);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erro na requisição: $e"))
+        const SnackBar(content: Text("Rascunho salvo com sucesso!"))
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RascunhosPage(),
+        ),
       );
     }
+  }
+
+  Future<void> _salvarRascunho(Map<String, dynamic> reportData) async {
+    final prefs = await SharedPreferences.getInstance();
+    final rascunhos = prefs.getStringList('rascunhos') ?? [];
+    reportData['dataCriacao'] = DateTime.now().toString(); // Adiciona data de criação
+    rascunhos.add(jsonEncode(reportData));
+    await prefs.setStringList('rascunhos', rascunhos);
   }
 
   @override
@@ -145,7 +184,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 80), // Espaço extra para evitar sobreposição com o botão de navegação
+              const SizedBox(height: 80),
             ],
           ),
         ),

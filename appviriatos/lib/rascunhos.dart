@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'navbutton.dart'; // Importa o navbutton para o botão e lógica de navegação
-import 'header.dart'; // Importa o CustomHeader
+import 'package:shared_preferences/shared_preferences.dart'; // Importe o pacote
+import 'navbutton.dart';
+import 'header.dart';
+import 'relatorio.dart'; // Importe a página de relatório
+import 'dart:convert';
+
 
 class RascunhosPage extends StatefulWidget {
   @override
@@ -8,38 +12,42 @@ class RascunhosPage extends StatefulWidget {
 }
 
 class _RascunhosPageState extends State<RascunhosPage> {
-  int _currentIndex = 1; // Índice atual da página (Rascunhos = 1)
+  int _currentIndex = 1;
+  List<Map<String, dynamic>> rascunhos = [];
 
-  final List<Map<String, String>> rascunhos = [
-    {
-      'titulo': 'Rascunho Do Jogador 1',
-      'data': 'Data de criação: __/__/____',
-    },
-    {
-      'titulo': 'Rascunho Do Jogador 2',
-      'data': 'Data de criação: __/__/____',
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _carregarRascunhos();
+  }
+
+  Future<void> _carregarRascunhos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rascunhosSalvos = prefs.getStringList('rascunhos') ?? [];
+    setState(() {
+      rascunhos = rascunhosSalvos.map((r) => jsonDecode(r) as Map<String, dynamic>).toList();
+
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomHeader(
         onBack: () {
-          Navigator.pop(context); // Voltar à página anterior
+          Navigator.pop(context);
         },
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 25),
-          // Título
           const Center(
             child: Text(
               'RASCUNHOS',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
+                fontFamily: 'FuturaStd',
                 color: Color.fromARGB(255, 0, 0, 0),
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
@@ -47,15 +55,13 @@ class _RascunhosPageState extends State<RascunhosPage> {
             ),
           ),
           const SizedBox(height: 16),
-          // Lista de rascunhos
           Expanded(
             child: ListView.builder(
               itemCount: rascunhos.length,
               itemBuilder: (context, index) {
                 final rascunho = rascunhos[index];
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Card(
                     elevation: 2,
                     shape: RoundedRectangleBorder(
@@ -68,18 +74,26 @@ class _RascunhosPageState extends State<RascunhosPage> {
                         color: Colors.black,
                       ),
                       title: Text(
-                        rascunho['titulo']!,
+                        'Rascunho do Jogador ${rascunho['athleteId']}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
-                        rascunho['data']!,
+                        'Data de criação: ${rascunho['dataCriacao']}',
                         style: const TextStyle(color: Colors.grey),
                       ),
                       onTap: () {
-                        // Ação ao clicar no rascunho
-                        print('Rascunho ${rascunho['titulo']} clicado');
+                        // Abrir o rascunho para edição
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RelatorioPage(
+                              athleteId: rascunho['athleteId'],
+                              rascunho: rascunho,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -89,7 +103,6 @@ class _RascunhosPageState extends State<RascunhosPage> {
           ),
         ],
       ),
-      // Botão de navegação flutuante
       floatingActionButton: CustomFloatingButton(
         currentIndex: _currentIndex,
         onTap: (index) => navigateToPage(context, index),
