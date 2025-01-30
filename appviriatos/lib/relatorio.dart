@@ -61,14 +61,6 @@ class _RelatorioPageState extends State<RelatorioPage> {
   }
 
   Future<void> salvarRelatorio({bool enviar = false}) async {
-    // Verifica se todos os campos obrigatórios estão preenchidos
-    if (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Preencha todos os campos antes de enviar."))
-      );
-      return;
-    }
-
     final Map<String, dynamic> reportData = {
       "athleteId": widget.athleteId,
       "userId": userId,
@@ -85,6 +77,14 @@ class _RelatorioPageState extends State<RelatorioPage> {
     };
 
     if (enviar) {
+      // Verifica se todos os campos obrigatórios estão preenchidos antes de enviar
+      if (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Preencha todos os campos antes de enviar."))
+        );
+        return;
+      }
+
       // Enviar relatório para a API
       final url = 'http://192.168.1.66:3000/reports';
       try {
@@ -119,7 +119,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
         );
       }
     } else {
-      // Salvar como rascunho localmente
+      // Salvar como rascunho localmente (não precisa de todos os campos preenchidos)
       await _salvarRascunho(reportData);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Rascunho salvo com sucesso!"))
