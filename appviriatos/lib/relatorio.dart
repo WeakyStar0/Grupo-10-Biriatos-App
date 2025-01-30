@@ -49,15 +49,21 @@ class _RelatorioPageState extends State<RelatorioPage> {
     super.initState();
     // Se estiver editando um rascunho, carregue os dados
     if (widget.rascunho != null) {
-      technical = widget.rascunho!['technical'];
-      speed = widget.rascunho!['speed'];
-      competitiveAttitude = widget.rascunho!['competitiveAttitude'];
-      intelligence = widget.rascunho!['intelligence'];
-      height = widget.rascunho!['height'];
-      morphology = widget.rascunho!['morphology'];
-      finalRating = widget.rascunho!['finalRating'];
-      freeTextController.text = widget.rascunho!['freeText'];
+      _carregarRascunho(widget.rascunho!);
     }
+  }
+
+  void _carregarRascunho(Map<String, dynamic> rascunho) {
+    setState(() {
+      technical = rascunho['technical'];
+      speed = rascunho['speed'];
+      competitiveAttitude = rascunho['competitiveAttitude'];
+      intelligence = rascunho['intelligence'];
+      height = rascunho['height'];
+      morphology = rascunho['morphology'];
+      finalRating = rascunho['finalRating'];
+      freeTextController.text = rascunho['freeText'];
+    });
   }
 
   Future<void> salvarRelatorio({bool enviar = false}) async {
