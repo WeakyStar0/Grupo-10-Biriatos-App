@@ -90,6 +90,10 @@ class _RelatorioPageState extends State<RelatorioPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Relatório salvo com sucesso!"))
           );
+
+          // Remove o rascunho correspondente
+          await _removerRascunho(widget.athleteId);
+
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -138,6 +142,19 @@ class _RelatorioPageState extends State<RelatorioPage> {
       // Adiciona um novo rascunho
       rascunhos.add(jsonEncode(reportData));
     }
+
+    await prefs.setStringList('rascunhos', rascunhos);
+  }
+
+  Future<void> _removerRascunho(int athleteId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final rascunhos = prefs.getStringList('rascunhos') ?? [];
+
+    // Remove o rascunho correspondente ao athleteId
+    rascunhos.removeWhere((r) {
+      final rascunho = jsonDecode(r) as Map<String, dynamic>;
+      return rascunho['athleteId'] == athleteId;
+    });
 
     await prefs.setStringList('rascunhos', rascunhos);
   }
