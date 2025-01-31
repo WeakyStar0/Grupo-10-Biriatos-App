@@ -172,31 +172,40 @@ class _TarefasPageState extends State<TarefasPage> {
                       return Card(
                         margin: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 16.0),
+                        elevation: 4.0, // Adiciona sombra ao card
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0), // Bordas arredondadas
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Nome do jogador (destacado)
                               Text(
-                                'Descrição: ${tarefa['description']}',
+                                jogador,
                                 style: const TextStyle(
+                                  fontSize: 20.0,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
+                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 8.0),
+                              // Descrição da tarefa (menos destacada)
                               Text(
-                                'Jogador: $jogador',
+                                tarefa['description'],
                                 style: const TextStyle(
                                   fontSize: 14.0,
                                   color: Colors.grey,
                                 ),
                               ),
+                              const SizedBox(height: 4.0),
+                              // Nome do clube (menos destacado)
                               Text(
                                 'Clube: $clube',
-                                style: const TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.grey,
+                                style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey[600],
                                 ),
                               ),
                             ],
