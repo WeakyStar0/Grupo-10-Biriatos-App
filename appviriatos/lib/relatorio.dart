@@ -49,95 +49,93 @@ class _RelatorioPageState extends State<RelatorioPage> {
     super.initState();
     // Se estiver editando um rascunho, carregue os dados
     if (widget.rascunho != null) {
-      _carregarRascunho(widget.rascunho!);
+      technical = widget.rascunho!['technical'];
+      speed = widget.rascunho!['speed'];
+      competitiveAttitude = widget.rascunho!['competitiveAttitude'];
+      intelligence = widget.rascunho!['intelligence'];
+      height = widget.rascunho!['height'];
+      morphology = widget.rascunho!['morphology'];
+      finalRating = widget.rascunho!['finalRating'];
+      freeTextController.text = widget.rascunho!['freeText'];
     }
-  }
-
-  void _carregarRascunho(Map<String, dynamic> rascunho) {
-    setState(() {
-      technical = rascunho['technical'];
-      speed = rascunho['speed'];
-      competitiveAttitude = rascunho['competitiveAttitude'];
-      intelligence = rascunho['intelligence'];
-      height = rascunho['height'];
-      morphology = rascunho['morphology'];
-      finalRating = rascunho['finalRating'];
-      freeTextController.text = rascunho['freeText'];
-    });
   }
 
   Future<void> salvarRelatorio({bool enviar = false}) async {
-    final Map<String, dynamic> reportData = {
-      "athleteId": widget.athleteId,
-      "userId": userId,
-      "technical": technical,
-      "speed": speed,
-      "competitiveAttitude": competitiveAttitude,
-      "intelligence": intelligence,
-      "height": height,
-      "morphology": morphology,
-      "finalRating": finalRating,
-      "freeText": freeTextController.text,
-      "fullName": widget.fullName, // Adiciona o nome do jogador
-      "dataCriacao": DateTime.now().toString(), // Adiciona data de criação
-    };
+  // Verifica se todos os campos obrigatórios estão preenchidos apenas ao enviar
+  if (enviar && (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Preencha todos os campos antes de enviar."))
+    );
+    return;
+  }
 
-    if (enviar) {
-      // Verifica se todos os campos obrigatórios estão preenchidos antes de enviar
-      if (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Preencha todos os campos antes de enviar."))
-        );
-        return;
-      }
+  final Map<String, dynamic> reportData = {
+    "athleteId": widget.athleteId,
+    "userId": userId,
+    "technical": technical,
+    "speed": speed,
+    "competitiveAttitude": competitiveAttitude,
+    "intelligence": intelligence,
+    "height": height,
+    "morphology": morphology,
+    "finalRating": finalRating,
+    "freeText": freeTextController.text,
+    "fullName": widget.fullName, // Adiciona o nome do jogador
+    "dataCriacao": DateTime.now().toIso8601String(), // Adiciona a data de criação
+  };
 
-      // Enviar relatório para a API
-      final url = 'http://192.168.1.66:3000/reports';
-      try {
-        final response = await http.post(
-          Uri.parse(url),
-          headers: {"Content-Type": "application/json"},
-          body: jsonEncode(reportData),
-        );
+  if (enviar) {
+    // Enviar relatório para a API
+    final url = 'http://192.168.1.66:3000/reports';
+    try {
+      print("Enviando relatório: ${jsonEncode(reportData)}");
 
-        if (response.statusCode == 201) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Relatório salvo com sucesso!"))
-          );
-
-          // Remove o rascunho correspondente
-          await _removerRascunho(widget.athleteId);
-
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => MenuPage(),
-            ),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Erro ao salvar: ${response.body}"))
-          );
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erro na requisição: $e"))
-        );
-      }
-    } else {
-      // Salvar como rascunho localmente (não precisa de todos os campos preenchidos)
-      await _salvarRascunho(reportData);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Rascunho salvo com sucesso!"))
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(reportData),
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => RascunhosPage(),
-        ),
+
+      print("Resposta da API: ${response.statusCode} - ${response.body}");
+
+      if (response.statusCode == 201) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Relatório salvo com sucesso!"))
+        );
+
+        // Remove o rascunho correspondente
+        await _removerRascunho(widget.athleteId);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MenuPage(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erro ao salvar: ${response.body}"))
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro na requisição: $e"))
       );
     }
+  } else {
+    // Salvar como rascunho localmente
+    await _salvarRascunho(reportData);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Rascunho salvo com sucesso!"))
+    );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RascunhosPage(),
+      ),
+    );
   }
+}
 
   Future<void> _salvarRascunho(Map<String, dynamic> reportData) async {
     final prefs = await SharedPreferences.getInstance();
@@ -216,21 +214,21 @@ class _RelatorioPageState extends State<RelatorioPage> {
                 maxLines: 3,
               ),
               const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => salvarRelatorio(enviar: false),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => salvarRelatorio(enviar: true),
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                    child: const Text('ENVIAR', style: TextStyle(color: Colors.white)),
-                  ),
-                ],
-              ),
+             Row(
+  mainAxisAlignment: MainAxisAlignment.spaceAround,
+  children: [
+    ElevatedButton(
+      onPressed: () => salvarRelatorio(enviar: false),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+      child: const Text('GUARDAR', style: TextStyle(color: Colors.white)),
+    ),
+    ElevatedButton(
+      onPressed: () => salvarRelatorio(enviar: true),
+      style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+      child: const Text('ENVIAR', style: TextStyle(color: Colors.white)),
+    ),
+  ],
+),
               const SizedBox(height: 80),
             ],
           ),

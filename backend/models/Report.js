@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const reportSchema = new mongoose.Schema({
-  reportId: { type: Number, unique: true },
+  reportId: { type: Number, unique: true }, // Único, mas não obrigatório
   athleteId: { type: Number, required: true },
   userId: { type: Number, required: true },
   technical: { type: Number, min: 1, max: 4, required: true },
@@ -12,15 +12,25 @@ const reportSchema = new mongoose.Schema({
   morphology: { type: String, enum: ['Ectomorph', 'Mesomorph', 'Endomorph'], required: true },
   finalRating: { type: Number, min: 1, max: 4, required: true },
   freeText: { type: String },
+  fullName: { type: String, required: true }, // Adicionado
+  dataCriacao: { type: String, required: true }, // Adicionado
 });
 
-// Antes de salvar, definir um reportId automaticamente
+// Middleware para gerar reportId automaticamente
 reportSchema.pre("save", async function (next) {
   if (!this.reportId) {
-    const lastReport = await Report.findOne().sort("-reportId");
-    this.reportId = lastReport ? lastReport.reportId + 1 : 1;
+    try {
+      const lastReport = await Report.findOne().sort("-reportId").exec();
+      this.reportId = lastReport ? lastReport.reportId + 1 : 1;
+      next();
+    } catch (error) {
+      next(error); // Passa o erro para o próximo middleware
+    }
+  } else {
+    next();
   }
-  next();
 });
 
 const Report = mongoose.model("Report", reportSchema);
+
+module.exports = Report;
