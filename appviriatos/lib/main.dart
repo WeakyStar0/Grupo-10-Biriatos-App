@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // Importa flutter_svg
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'menu.dart'; // Import MenuPage
-import 'tos.dart'; // Import TermsOfServicePage 
+import 'tos.dart'; // Import TermsOfServicePage
 
 void main() {
   runApp(MyApp());
@@ -32,11 +34,55 @@ class _LoginPageState extends State<LoginPage> {
   bool _termsAccepted = false;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  Future<void> _login() async {
+    if (_formKey.currentState!.validate() && _termsAccepted) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      final String email = _emailController.text;
+      final String password = _passwordController.text;
+
+      try {
+        final response = await http.post(
+          Uri.parse('http://localhost:3000/users/login'), // Endpoint de login no backend
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'email': email,
+            'password': password,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = jsonDecode(response.body);
+          // Aqui você pode salvar o token de autenticação ou outras informações do usuário
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MenuPage()),
+          );
+        } else {
+          final Map<String, dynamic> errorData = jsonDecode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(errorData['error'] ?? 'Erro ao fazer login')),
+          );
+        }
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao conectar com o servidor')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -57,16 +103,16 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: 20),
 
                 Text(
-                'LOGIN',
-                style: TextStyle(
-                  fontFamily: 'FuturaStd', // Nome da família definida no pubspec.yaml
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold,
-                ),
+                  'LOGIN',
+                  style: TextStyle(
+                    fontFamily: 'FuturaStd',
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 30),
-      
+
                 // Email Field
                 TextFormField(
                   controller: _emailController,
@@ -135,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: 20),
 
-                // Login 
+                // Login Button
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -146,21 +192,13 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    onPressed: _termsAccepted &&
-                            _formKey.currentState!.validate()
-                        ? () {
-                            // menu
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => MenuPage()),
-                            );
-                          }
-                        : null,
-                    child: Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
-                      
-                    ),
+                    onPressed: _isLoading ? null : _login,
+                    child: _isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            'Login',
+                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
                   ),
                 ),
               ],

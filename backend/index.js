@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const app = express();
 
 // Middleware para parsing JSON
 app.use(bodyParser.json());
+app.use(cors());
 
 // Conexão ao MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/scouting_database', { useNewUrlParser: true, useUnifiedTopology: true })
@@ -133,6 +136,57 @@ app.post('/users', async (req, res) => {
   }
 });
 
+app.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Verifica se o usuário existe
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ error: 'Email ou senha incorretos.' });
+    }
+
+    // Verifica a senha
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: 'Email ou senha incorretos.' });
+    }
+
+    // Retorna os dados do usuário (exceto a senha)
+    const userData = {
+      userId: user.userId,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+    };
+
+    res.status(200).json({ message: 'Login bem-sucedido!', user: userData });
+  } catch (error) {
+    console.error('Erro ao fazer login:', error);
+    res.status(500).json({ error: 'Erro ao fazer login.' });
+  }
+});
+
+app.post('/users/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ error: 'Usuário não encontrado.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Senha incorreta.' });
+    }
+
+    res.status(200).json({ message: 'Login bem-sucedido!', user });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao fazer login.' });
+  }
+});
+
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find();
@@ -141,8 +195,6 @@ app.get('/users', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar usuários.' });
   }
 });
-
-
 
 // CRUD para atletas
 app.post('/athletes', async (req, res) => {
