@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
   userId: { type: Number, required: true, unique: true },
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   role: { type: String, enum: ['Administrador', 'Utilizador', 'Outro'], required: true },
 });
 
@@ -98,22 +99,50 @@ app.get('/', (req, res) => {
 // CRUD para usuários
 app.post('/users', async (req, res) => {
   try {
-    const user = new User(req.body);
+    const { fullName, email, password, role } = req.body;
+
+    // Verifica se o email já está em uso
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log('Email já cadastrado:', email);
+      return res.status(400).json({ error: 'Email já está em uso.' });
+    }
+
+    // Gera um novo userId baseado no último ID salvo
+    const lastUser = await User.findOne().sort('-userId');
+    const newUserId = lastUser ? lastUser.userId + 1 : 1;
+
+    // Hash da senha
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Criação do usuário
+    const user = new User({
+      userId: newUserId,
+      fullName,
+      email,
+      password: hashedPassword,
+      role,
+    });
+
     await user.save();
-    res.status(201).send(user);
+    console.log('Usuário criado com sucesso:', user);
+    res.status(201).json({ message: 'Usuário criado com sucesso!', user });
   } catch (error) {
-    res.status(400).send(error);
+    console.error('Erro ao criar usuário:', error);
+    res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
   }
 });
 
 app.get('/users', async (req, res) => {
   try {
     const users = await User.find();
-    res.status(200).send(users);
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).json({ error: 'Erro ao buscar usuários.' });
   }
 });
+
+
 
 // CRUD para atletas
 app.post('/athletes', async (req, res) => {
