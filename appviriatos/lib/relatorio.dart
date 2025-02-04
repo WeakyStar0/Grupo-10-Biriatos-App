@@ -106,10 +106,14 @@ class _RelatorioPageState extends State<RelatorioPage> {
         // Remove o rascunho correspondente
         await _removerRascunho(widget.athleteId);
 
+        // Obtenha o userRole de onde ele está armazenado (exemplo: SharedPreferences)
+        final prefs = await SharedPreferences.getInstance();
+        final userRole = prefs.getString('userRole') ?? 'Outro'; // Defina um valor padrão
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => MenuPage(),
+            builder: (context) => MenuPage(userRole: userRole), // Passa o userRole
           ),
         );
       } else {
@@ -136,7 +140,6 @@ class _RelatorioPageState extends State<RelatorioPage> {
     );
   }
 }
-
   Future<void> _salvarRascunho(Map<String, dynamic> reportData) async {
     final prefs = await SharedPreferences.getInstance();
     final rascunhos = prefs.getStringList('rascunhos') ?? [];

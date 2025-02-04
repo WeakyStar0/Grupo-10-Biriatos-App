@@ -36,49 +36,53 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> _login() async {
-    if (_formKey.currentState!.validate() && _termsAccepted) {
-      setState(() {
-        _isLoading = true;
-      });
+ Future<void> _login() async {
+  if (_formKey.currentState!.validate() && _termsAccepted) {
+    setState(() {
+      _isLoading = true;
+    });
 
-      final String email = _emailController.text;
-      final String password = _passwordController.text;
+    final String email = _emailController.text;
+    final String password = _passwordController.text;
 
-      try {
-        final response = await http.post(
-          Uri.parse('http://localhost:3000/users/login'), // Endpoint de login no backend
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'email': email,
-            'password': password,
-          }),
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/users/login'), // Endpoint de login no backend
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String userRole = responseData['user']['role']; // Extrai o userRole da resposta
+
+        // Navega para a MenuPage passando o userRole
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MenuPage(userRole: userRole), // Passa o userRole
+          ),
         );
-
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> responseData = jsonDecode(response.body);
-          // Aqui você pode salvar o token de autenticação ou outras informações do usuário
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => MenuPage()),
-          );
-        } else {
-          final Map<String, dynamic> errorData = jsonDecode(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(errorData['error'] ?? 'Erro ao fazer login')),
-          );
-        }
-      } catch (error) {
+      } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao conectar com o servidor')),
+          SnackBar(content: Text(errorData['error'] ?? 'Erro ao fazer login')),
         );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
       }
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao conectar com o servidor')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
