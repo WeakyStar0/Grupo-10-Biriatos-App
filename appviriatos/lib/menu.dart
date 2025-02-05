@@ -136,16 +136,6 @@ class HomeScreen extends StatelessWidget {
                 );
               },
             ),
-            NavigationButton(
-              icon: Icons.note_alt_outlined,
-              label: 'RASCUNHOS',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => RascunhosPage()),
-                );
-              },
-            ),
           ],
           NavigationButton(
             icon: Icons.logout,
