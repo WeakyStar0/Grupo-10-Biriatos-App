@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        final String userRole = responseData['user']['role']; // Extrai o userRole da resposta
+        final String userRole = responseData['user']['role']; // Extrai o userRole da respost
 
         // Navega para a MenuPage passando o userRole
         Navigator.pushReplacement(
