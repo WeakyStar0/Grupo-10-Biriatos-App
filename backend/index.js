@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 
 const app = express();
 
@@ -11,13 +15,12 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Conexão ao MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/scouting_database', { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Conectado ao MongoDB');
-  })
-  .catch((error) => {
-    console.error('Erro de conexão ao MongoDB:', error);
-  });
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Conectado ao MongoDB Atlas'))
+.catch(err => console.error('Erro ao conectar ao MongoDB Atlas:', err));
 
 // Schemas e Models
 const userSchema = new mongoose.Schema({
@@ -367,7 +370,7 @@ app.get('/tasks', async (req, res) => {
   }
 });
 // Iniciar o servidor
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
