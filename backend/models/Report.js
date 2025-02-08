@@ -10,6 +10,7 @@ const reportSchema = new mongoose.Schema({
   intelligence: { type: Number, min: 1, max: 4, required: true },
   height: { type: String, enum: ['High', 'Medium', 'Low'], required: true },
   morphology: { type: String, enum: ['Ectomorph', 'Mesomorph', 'Endomorph'], required: true },
+  adminRating: { type: Number, min: 1, max: 4, required: false, default: null },
   finalRating: { type: Number, min: 1, max: 4, required: true },
   freeText: { type: String },
   fullName: { type: String, required: true }, // Adicionado

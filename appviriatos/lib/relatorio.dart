@@ -60,7 +60,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
     }
   }
 
-  Future<void> salvarRelatorio({bool enviar = false}) async {
+ Future<void> salvarRelatorio({bool enviar = false}) async {
   // Verifica se todos os campos obrigatórios estão preenchidos apenas ao enviar
   if (enviar && (technical == null || speed == null || competitiveAttitude == null || intelligence == null || height == null || morphology == null || finalRating == null)) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -82,6 +82,7 @@ class _RelatorioPageState extends State<RelatorioPage> {
     "freeText": freeTextController.text,
     "fullName": widget.fullName, // Adiciona o nome do jogador
     "dataCriacao": DateTime.now().toIso8601String(), // Adiciona a data de criação
+    "adminRating": null, // Define adminRating como null
   };
 
   if (enviar) {
