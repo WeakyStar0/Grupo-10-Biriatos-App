@@ -28,7 +28,10 @@ class _ClubesPageState extends State<ClubesPage> {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         setState(() {
-          clubes = json.decode(response.body); // Decodifica o JSON recebido
+          // Filtra os clubes para exibir apenas aqueles com teamType: "Club"
+          clubes = (json.decode(response.body) as List)
+              .where((clube) => clube['teamType'] == "Club")
+              .toList();
           isLoading = false; // Finaliza o carregamento
         });
       } else {
